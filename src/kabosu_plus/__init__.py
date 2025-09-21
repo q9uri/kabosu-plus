@@ -179,7 +179,7 @@ def normalizer(
     if sbv2:
         text = normalize_text(text)
 
-    return  normalizer(
+    return  kabosu_core.normalizer(
         text=text,
         hankaku=hankaku,
         itaiji=itaiji,
