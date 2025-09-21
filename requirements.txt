@@ -1,0 +1,3 @@
+kabosu-core @ git+https://github.com/q9uri/kabosu-core@bf95fc6f227cabbb0e38220f32dc9da7fffdd38c
+e2k
+num2words
