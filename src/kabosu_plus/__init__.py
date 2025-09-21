@@ -17,7 +17,7 @@ def update_global_jtalk_with_user_dict(
     Note that this will change the global state of the openjtalk module.
 
     """
-    kabosu_core,update_global_jtalk_with_user_dict(user_dictionary=user_dictionary)
+    kabosu_core.update_global_jtalk_with_user_dict(user_dictionary=user_dictionary)
 
 def extract_fullcontext(
         text: str,
