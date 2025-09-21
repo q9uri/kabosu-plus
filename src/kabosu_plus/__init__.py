@@ -38,7 +38,7 @@ def extract_fullcontext(
     => list[str] : fullcontext label
     """
     text = normalizer(
-        ext=text,
+        text=text,
         hankaku=hankaku,
         itaiji=itaiji,
         kanalizer=kanalizer,
@@ -72,7 +72,7 @@ def g2p(
         jpreprocess: Union[jpreprocess.JPreprocess, None] = None
     ):
     text = normalizer(
-        ext=text,
+        text=text,
         hankaku=hankaku,
         itaiji=itaiji,
         kanalizer=kanalizer,
@@ -117,7 +117,7 @@ def run_frontend(
     => list[NjdObject] : njd_features
     """
     text = normalizer(
-        ext=text,
+        text=text,
         hankaku=hankaku,
         itaiji=itaiji,
         kanalizer=kanalizer,
