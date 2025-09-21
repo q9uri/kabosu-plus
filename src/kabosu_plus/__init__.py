@@ -23,12 +23,13 @@ def extract_fullcontext(
         text: str,
         hankaku: bool = True,
         itaiji: bool = True,
+        kanalizer: bool = False,
         yomikata: bool = True,
-        kanalizer: bool = True,
+        sbv2: bool = True,
         use_vanilla: bool = False,
         run_marine: bool = False,
         jpreprocess: Union[jpreprocess.JPreprocess, None] = None
-        ) -> list[str]:
+    ) -> list[str]:
     
     """
     ### input 
@@ -36,6 +37,14 @@ def extract_fullcontext(
     ## output
     => list[str] : fullcontext label
     """
+    text = normalizer(
+        ext=text,
+        hankaku=hankaku,
+        itaiji=itaiji,
+        kanalizer=kanalizer,
+        yomikata=yomikata,
+        sbv2=sbv2
+    )
 
     return kabosu_core.extract_fullcontext(
         text=text,
@@ -53,21 +62,30 @@ def g2p(
         text: str,
         hankaku: bool = True,
         itaiji: bool = True,
+        kanalizer: bool = False,
         yomikata: bool = True,
-        kanalizer: bool = True,
+        sbv2: bool = True,
         use_vanilla: bool = False,
         run_marine: bool = False,
         kana: bool = False,
         join: bool = True,
         jpreprocess: Union[jpreprocess.JPreprocess, None] = None
     ):
-
-    return kabosu_core.g2p(
-        text=text,
+    text = normalizer(
+        ext=text,
         hankaku=hankaku,
         itaiji=itaiji,
-        yomikata=yomikata,
         kanalizer=kanalizer,
+        yomikata=yomikata,
+        sbv2=sbv2
+    )
+        
+    return kabosu_core.g2p(
+        text=text,
+        hankaku=False,
+        itaiji=False,
+        kanalizer=False,
+        yomikata=False,
         use_vanilla=use_vanilla,
         run_marine=run_marine,
         kana=kana,
@@ -76,15 +94,16 @@ def g2p(
     )
 
 def run_frontend(
-            text: str,
-            hankaku: bool = True,
-            itaiji: bool = True,
-            kanalizer: bool = True,
-            yomikata: bool = True,
-            use_vanilla: bool = False,
-            run_marine: bool = False,
-            jpreprocess: Union[jpreprocess.JPreprocess, None] = None
-            ) -> list[NjdObject]:
+        text: str,
+        hankaku: bool = True,
+        itaiji: bool = True,
+        kanalizer: bool = False,
+        yomikata: bool = True,
+        sbv2: bool = True,
+        use_vanilla: bool = False,
+        run_marine: bool = False,
+        jpreprocess: Union[jpreprocess.JPreprocess, None] = None
+    ) -> list[NjdObject]:
     """
     ### input 
     text (str): input text  
@@ -97,17 +116,25 @@ def run_frontend(
     ## output
     => list[NjdObject] : njd_features
     """
+    text = normalizer(
+        ext=text,
+        hankaku=hankaku,
+        itaiji=itaiji,
+        kanalizer=kanalizer,
+        yomikata=yomikata,
+        sbv2=sbv2
+    )
 
     return kabosu_core.run_frontend(
-            text=text,
-            hankaku=hankaku,
-            itaiji=itaiji,
-            kanalizer=kanalizer,
-            yomikata=yomikata,
-            use_vanilla=use_vanilla,
-            run_marine=run_marine,
-            jpreprocess=jpreprocess
-            )
+        text=text,
+        hankaku=False,
+        itaiji=False,
+        kanalizer=False,
+        yomikata=False,
+        use_vanilla=use_vanilla,
+        run_marine=run_marine,
+        jpreprocess=jpreprocess
+    )
 
 def make_label(
         njd_features: list[NjdObject], 
