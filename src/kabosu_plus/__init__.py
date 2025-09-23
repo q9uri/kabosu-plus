@@ -28,6 +28,7 @@ def extract_fullcontext(
         sbv2: bool = True,
         use_vanilla: bool = False,
         run_marine: bool = False,
+        keihan: bool = False,
         jpreprocess: Union[jpreprocess.JPreprocess, None] = None
     ) -> list[str]:
     
@@ -54,6 +55,7 @@ def extract_fullcontext(
         kanalizer=kanalizer,
         use_vanilla=use_vanilla,
         run_marine=run_marine,
+        keihan=keihan,
         jpreprocess=jpreprocess
         )
 
@@ -67,6 +69,7 @@ def g2p(
         sbv2: bool = True,
         use_vanilla: bool = False,
         run_marine: bool = False,
+        keihan: bool = False,
         kana: bool = False,
         join: bool = True,
         jpreprocess: Union[jpreprocess.JPreprocess, None] = None
@@ -88,6 +91,7 @@ def g2p(
         yomikata=False,
         use_vanilla=use_vanilla,
         run_marine=run_marine,
+        keihan=keihan,
         kana=kana,
         join=join,
         jpreprocess=jpreprocess
@@ -102,6 +106,7 @@ def run_frontend(
         sbv2: bool = True,
         use_vanilla: bool = False,
         run_marine: bool = False,
+        keihan: bool = False,
         jpreprocess: Union[jpreprocess.JPreprocess, None] = None
     ) -> list[NjdObject]:
     """
@@ -131,6 +136,7 @@ def run_frontend(
         itaiji=False,
         kanalizer=False,
         yomikata=False,
+        keihan=keihan,
         use_vanilla=use_vanilla,
         run_marine=run_marine,
         jpreprocess=jpreprocess
