@@ -21,5 +21,17 @@ def test_g2p():
     output = kabosu_plus.g2p("そして、畳の表は、すでに幾年前に換えられたのか分らなかった。", kana=True)
     assert output == "ソシテ、タタミノオモテハ、スデニイクネンマエニカエラレタノカワカラナカッタ、"
     output = kabosu_plus.g2p("you are so cute! mii-chan!", kana=True)
-    assert output == "ユー、アー、ソー、キュート、、ミイ、チャン、"
+    assert output == "ユーアーソーキュート、ミイチャン、  "
     print(output)
+
+def test_njd_features_to_babytalk():
+
+    fullcontext = kabosu_plus.extract_fullcontext("可愛い赤ちゃんですねー。触ってもいいですか？")
+    babytalk_fullcontext = kabosu_plus.extract_fullcontext("可愛い赤ちゃんですねー。触ってもいいですか？", babytalk=True)
+    assert fullcontext != babytalk_fullcontext
+
+def test_njd_features_to_dakuten():
+
+    fullcontext = kabosu_plus.extract_fullcontext("それでも、僕は知らないッ")
+    dakuten_fullcontext = kabosu_plus.extract_fullcontext("それでも、僕は知らないッ",  dakuten=True)
+    assert fullcontext != dakuten_fullcontext

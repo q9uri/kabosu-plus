@@ -1055,7 +1055,7 @@ sdist = { url = "https://files.pythonhosted.org/packages/f1/2a/f64a28c236e3e8687
 [[package]]
 name = "kabosu-core"
 version = "0.3.0"
-source = { git = "https://github.com/q9uri/kabosu-core?rev=ff92910b69da16f523f9cb6bda1c4ba67ea96660#ff92910b69da16f523f9cb6bda1c4ba67ea96660" }
+source = { git = "https://github.com/q9uri/kabosu-core?rev=19a8e166c7d8dde54b2c66dba642defa6827e4e2#19a8e166c7d8dde54b2c66dba642defa6827e4e2" }
 dependencies = [
     { name = "jaconv" },
     { name = "jpreprocess" },
@@ -1098,7 +1098,7 @@ requires-dist = [
     { name = "e2k", specifier = ">=0.6.2" },
     { name = "jaconv", specifier = ">=0.4.0" },
     { name = "jpreprocess", specifier = ">=0.1.5" },
-    { name = "kabosu-core", git = "https://github.com/q9uri/kabosu-core?rev=ff92910b69da16f523f9cb6bda1c4ba67ea96660" },
+    { name = "kabosu-core", git = "https://github.com/q9uri/kabosu-core?rev=19a8e166c7d8dde54b2c66dba642defa6827e4e2" },
     { name = "kanalizer", specifier = ">=0.1.1" },
     { name = "marine-plus", specifier = ">=0.0.6.post3" },
     { name = "num2words", specifier = ">=0.5.14" },
