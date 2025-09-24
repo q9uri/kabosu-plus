@@ -39,7 +39,7 @@ packages = ["src/kabosu_plus"]
 
 [tool.uv.sources]
 yomikata = { git = "https://github.com/q9uri/yomikata", rev = "e0d23496dd17b1b97a2a91bef08a41f77d3932d8" }
-kabosu-core = { git = "https://github.com/q9uri/kabosu-core", rev = "19a8e166c7d8dde54b2c66dba642defa6827e4e2" }
+kabosu-core = { git = "https://github.com/q9uri/kabosu-core", rev = "f66e09f5ac7c8f7fa47f2861396410746370f9bc" }
 
 [build-system]
 requires = ["hatchling"]
