@@ -2,8 +2,9 @@
 kabosu-core @ git+https://github.com/q9uri/kabosu-core@f66e09f5ac7c8f7fa47f2861396410746370f9bc
 e2k
 #korean g2p
-num2wordsjamo
+num2words
 g2pk2
+jamo
 #chinese g2p
 pypinyin
 jieba
