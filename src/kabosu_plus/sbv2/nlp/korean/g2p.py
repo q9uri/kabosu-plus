@@ -383,12 +383,6 @@ def g2p(text):
 
     return phones, tones, word2ph
 
-"""
-def get_bert_feature(text, word2ph):
-    from text import korean_bert
-
-    return korean_bert.py.get_bert_feature(text, word2ph)
-"""
 
 if __name__ == "__main__":
     # print(get_dict())
