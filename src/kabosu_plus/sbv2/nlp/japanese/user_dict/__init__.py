@@ -19,7 +19,7 @@ from kabosu_plus.sbv2.constants import DEFAULT_USER_DICT_DIR
 
 import jpreprocess
 
-import kabosu_plus import update_global_jtalk_with_user_dict
+from kabosu_plus import update_global_jtalk_with_user_dict
 from kabosu_plus.sbv2.nlp.japanese.user_dict.part_of_speech_data import (
     MAX_PRIORITY,
     MIN_PRIORITY,
