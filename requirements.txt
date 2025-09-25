@@ -1,3 +1,11 @@
+#japanese g2p
 kabosu-core @ git+https://github.com/q9uri/kabosu-core@f66e09f5ac7c8f7fa47f2861396410746370f9bc
 e2k
-num2words
+#korean g2p
+num2wordsjamo
+g2pk2
+#chinese g2p
+pypinyin
+jieba
+#english g2p
+g2p_en

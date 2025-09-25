@@ -1,6 +1,6 @@
 
 from .types import NjdObject
-from .sbv2.normalizer import normalize_text
+from .sbv2.nlp.japanese.normalizer import normalize_text
 from typing import Union
 from pathlib import Path
 import kabosu_core
