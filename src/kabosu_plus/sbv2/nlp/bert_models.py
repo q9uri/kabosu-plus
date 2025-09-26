@@ -13,14 +13,7 @@ from __future__ import annotations
 import gc
 from typing import Optional, Union, cast
 
-from transformers import (
-    AutoTokenizer,
-    DebertaV2TokenizerFast,
-    PreTrainedTokenizer,
-    PreTrainedTokenizerFast,
-)
-
-from kabosu_plus.sbv2.constants import DEFAULT_BERT_MODEL_PATHS, Languages
+from kabosu_plus.sbv2.constants import Languages
 from kabosu_plus.sbv2.logging import logger
 from kabosu_plus.sbv2.nlp import onnx_bert_models
 
@@ -73,30 +66,8 @@ def load_tokenizer(
         # ライブラリ利用時、特例的にこの状況で ONNX 版 BERT トークナイザーがロードされている場合はそのまま返す
         ## ONNX 版 BERT トークナイザー単独で g2p 処理を行うために必要 (各言語の g2p.py はこの関数に依存している)
         ## 設計的には微妙だがこの方が差異を吸収できて手っ取り早い
-        if DEFAULT_BERT_MODEL_PATHS[language].exists() is False and onnx_bert_models.is_tokenizer_loaded(language):  # fmt: skip
+        if onnx_bert_models.is_tokenizer_loaded(language):  # fmt: skip
             return onnx_bert_models.load_tokenizer(language)
-        assert DEFAULT_BERT_MODEL_PATHS[language].exists(), \
-            f"The default {language.name} BERT tokenizer does not exist on the file system. Please specify the path to the pre-trained model."  # fmt: skip
-        pretrained_model_name_or_path = str(DEFAULT_BERT_MODEL_PATHS[language])
-
-    # BERT トークナイザーをロードし、辞書に格納して返す
-    ## 英語のみ DebertaV2TokenizerFast でロードする必要がある
-    if language == Languages.EN:
-        __loaded_tokenizers[language] = DebertaV2TokenizerFast.from_pretrained(
-            pretrained_model_name_or_path,
-            cache_dir=cache_dir,
-            revision=revision,
-        )
-    else:
-        __loaded_tokenizers[language] = AutoTokenizer.from_pretrained(
-            pretrained_model_name_or_path,
-            cache_dir=cache_dir,
-            revision=revision,
-            use_fast=True,  # デフォルトで True だが念のため明示的に指定
-        )
-    logger.info(
-        f"Loaded the {language.name} BERT tokenizer from {pretrained_model_name_or_path}"
-    )
 
     return __loaded_tokenizers[language]
 
