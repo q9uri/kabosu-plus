@@ -28,5 +28,5 @@ def languge_selector(
         else:
             lang = Languages.JP
 
-    retrun lang
+    return lang
     
