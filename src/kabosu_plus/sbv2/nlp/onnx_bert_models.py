@@ -24,7 +24,7 @@ from transformers import (
     PreTrainedTokenizerFast,
 )
 
-from kabosu_plus.sbv2.constants import DEFAULT_ONNX_BERT_MODEL_PATHS, Languages
+from kabosu_plus.sbv2.constants import Languages
 from kabosu_plus.sbv2.logging import logger
 
 
@@ -72,12 +72,6 @@ def load_model(
     # すでにロード済みの場合はそのまま返す
     if language in __loaded_models:
         return __loaded_models[language]
-
-    # pretrained_model_name_or_path が指定されていない場合はデフォルトのパスを利用
-    if pretrained_model_name_or_path is None:
-        assert DEFAULT_ONNX_BERT_MODEL_PATHS[language].exists(), \
-            f"The default {language.name} ONNX BERT model does not exist on the file system. Please specify the path to the pre-trained model."  # fmt: skip
-        pretrained_model_name_or_path = str(DEFAULT_ONNX_BERT_MODEL_PATHS[language])
 
     # pretrained_model_name_or_path に Hugging Face のリポジトリ名が指定された場合 (aaaa/bbbb のフォーマットを想定):
     # 指定された revision の ONNX 版 BERT モデルを cache_dir にダウンロードする (既にダウンロード済みの場合は何も行われない)
