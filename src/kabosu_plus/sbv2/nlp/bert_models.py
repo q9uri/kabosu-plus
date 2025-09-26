@@ -13,6 +13,13 @@ from __future__ import annotations
 import gc
 from typing import Optional, Union, cast
 
+from transformers import (
+    DebertaV2TokenizerFast,
+    PreTrainedTokenizer,
+    PreTrainedTokenizerFast,
+)
+
+
 from kabosu_plus.sbv2.constants import Languages
 from kabosu_plus.sbv2.logging import logger
 from kabosu_plus.sbv2.nlp import onnx_bert_models
