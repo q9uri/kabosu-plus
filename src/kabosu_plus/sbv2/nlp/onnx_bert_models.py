@@ -73,7 +73,7 @@ def load_model(
     if language in __loaded_models:
         return __loaded_models[language]
 
-        # pretrained_model_name_or_path が指定されていない場合はデフォルトのパスを利用
+    # pretrained_model_name_or_path が指定されていない場合はデフォルトのパスを利用
     if pretrained_model_name_or_path is None:
         assert DEFAULT_ONNX_BERT_MODEL_PATHS[language].exists(), \
             f"The default {language.name} BERT tokenizer does not exist on the file system. Please specify the path to the pre-trained model."  # fmt: skip
@@ -179,6 +179,14 @@ def load_tokenizer(
     # すでにロード済みの場合はそのまま返す
     if language in __loaded_tokenizers:
         return __loaded_tokenizers[language]
+
+    
+    # pretrained_model_name_or_path が指定されていない場合はデフォルトのパスを利用
+    if pretrained_model_name_or_path is None:
+        assert DEFAULT_ONNX_BERT_MODEL_PATHS[language].exists(), \
+            f"The default {language.name} BERT tokenizer does not exist on the file system. Please specify the path to the pre-trained model."  # fmt: skip
+        pretrained_model_name_or_path = str(DEFAULT_ONNX_BERT_MODEL_PATHS[language])
+
 
     # BERT トークナイザーをロードし、辞書に格納して返す
     ## 英語のみ DebertaV2TokenizerFast でロードする必要がある
