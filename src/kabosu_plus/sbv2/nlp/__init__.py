@@ -23,10 +23,10 @@ def languge_selector(
         lang = Languages.JP
 
     else:
-    if "EN" in supported_languge:
-        lang = Languages.EN
-    else:
-        lang = Languages.JP
+        if "EN" in supported_languge:
+            lang = Languages.EN
+        else:
+            lang = Languages.JP
 
     retrun lang
     
