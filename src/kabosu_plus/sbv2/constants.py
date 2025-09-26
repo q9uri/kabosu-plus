@@ -21,6 +21,15 @@ class Languages(StrEnum):
     KO = "KO"
 
 
+# 言語ごとのデフォルトの BERT モデル (ONNX 版) のパス
+DEFAULT_ONNX_BERT_MODEL_PATHS = {
+    Languages.JP: BASE_DIR / "weight" / "bert" / "deberta-v2-large-japanese-char-wwm-onnx",
+    Languages.EN: BASE_DIR / "weight" / "bert" / "deberta-v3-large-onnx",
+    Languages.ZH: BASE_DIR / "weight" / "bert" / "chinese-roberta-wwm-ext-large-onnx",
+    Languages.KO: BASE_DIR / "weight" / "bert" / "kcbert-large-onnx"
+}
+
+
 # デフォルトのユーザー辞書ディレクトリ
 ## style_bert_vits2.nlp.japanese.user_dict モジュールのデフォルト値として利用される
 ## ライブラリとしての利用などで外部のユーザー辞書を指定したい場合は、user_dict 以下の各関数の実行時、引数に辞書データファイルのパスを指定する
