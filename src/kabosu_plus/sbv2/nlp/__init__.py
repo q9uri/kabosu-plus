@@ -1,6 +1,7 @@
 from kabosu_plus.sbv2.constants import Languages
 
 from typing import Literal
+import re
 
 # ↓ ひらがな、カタカナ、漢字
 JAPANESE_PATTERN = re.compile(r"[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF\u3400-\u4DBF\u3005]+")
