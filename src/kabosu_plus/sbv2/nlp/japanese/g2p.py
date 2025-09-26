@@ -4,7 +4,7 @@ from typing import TypedDict
 
 from kabosu_plus.sbv2.constants import Languages
 from kabosu_plus.sbv2.logging import logger
-from kabosu_plus.sbv2.nlp import bert_models
+from kabosu_plus.sbv2.nlp import onnx_bert_models
 
 from kabosu_plus import (
     run_frontend,
@@ -96,7 +96,7 @@ def g2p(
     for i in sep_text:
         if i not in PUNCTUATIONS:
             sep_tokenized.append(
-                bert_models.load_tokenizer(Languages.JP).tokenize(i)
+                onnx_bert_models.load_tokenizer(Languages.JP).tokenize(i)
             )  # ここでおそらく`i`が文字単位に分割される
         else:
             sep_tokenized.append([i])
@@ -867,30 +867,3 @@ class YomiError(Exception):
     基本的に「学習の前処理のテキスト処理時」には発生させ、そうでない場合は、
     raise_yomi_error=False にしておいて、この例外を発生させないようにする。
     """
-
-
-if __name__ == "__main__":
-    import time
-
-    from style_bert_vits2.nlp.japanese.g2p_utils import phone_tone2kata_tone
-    from style_bert_vits2.nlp.japanese.normalizer import normalize_text
-
-    if len(sys.argv) != 2:
-        print("Usage: python -m style_bert_vits2.nlp.japanese.g2p <text>")
-        sys.exit(1)
-    bert_models.load_tokenizer(Languages.JP)
-    start = time.time()
-    phones, tones, word2ph, sep_text, sep_kata, sep_kata_with_joshi = g2p(
-        normalize_text(sys.argv[1])
-    )
-    end = time.time()
-    print(f"time: {end - start:.4f}s")
-    phone_tones = phone_tone2kata_tone(list(zip(phones, tones)))
-    print(f"phone_tones: {phone_tones}")
-    print(f"word2ph: {word2ph}")
-    print(f"sep_text: {sep_text}")
-    print(f"sep_kata: {sep_kata}")
-    print(f"sep_kata_with_joshi: {sep_kata_with_joshi}")
-    assert len(phones) == len(tones) == sum(word2ph), (
-        "phone, tones の長さと word2ph の和は一致するはず"
-    )

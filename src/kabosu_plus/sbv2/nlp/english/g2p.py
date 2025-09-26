@@ -3,7 +3,7 @@ import re
 from g2p_en import G2p
 
 from kabosu_plus.sbv2.constants import Languages
-from kabosu_plus.sbv2.nlp import bert_models
+from kabosu_plus.sbv2.nlp import onnx_bert_models
 from kabosu_plus.sbv2.nlp.english.cmudict import get_dict, get_shortform_dict
 from kabosu_plus.sbv2.nlp.symbols import PUNCTUATIONS, SYMBOLS
 
@@ -197,7 +197,7 @@ def __distribute_phone(n_phone: int, n_word: int) -> list[int]:
 
 
 def __text_to_words(text: str) -> list[list[str]]:
-    tokenizer = bert_models.load_tokenizer(Languages.EN)
+    tokenizer = onnx_bert_models.load_tokenizer(Languages.EN)
     tokens = tokenizer.tokenize(text)
     words = []
     for idx, t in enumerate(tokens):
