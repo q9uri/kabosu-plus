@@ -15,7 +15,7 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import Any, Optional, Union
 
-from optimum.onnxruntime import ORTModelForMaskedLM
+import onnxruntime
 from huggingface_hub import hf_hub_download
 from transformers import (
     AutoTokenizer,
@@ -23,7 +23,6 @@ from transformers import (
     PreTrainedTokenizer,
     PreTrainedTokenizerFast,
 )
-import onnxruntime
 
 from kabosu_plus.sbv2.constants import Languages, DEFAULT_ONNX_BERT_MODEL_PATHS
 from kabosu_plus.sbv2.logging import logger
@@ -46,7 +45,7 @@ def load_model(
     cache_dir: Optional[str] = None,
     revision: str = "main",
     enable_cpu_mem_arena: bool | None = None,
-):  # fmt: skip
+) -> onnxruntime.InferenceSession:  # fmt: skip
     """
     指定された言語の ONNX 版 BERT モデルをロードし、ロード済みの ONNX 版 BERT モデルを返す。
     一度ロードされていれば、ロード済みの ONNX 版 BERT モデルを即座に返す。
@@ -84,14 +83,14 @@ def load_model(
     # pretrained_model_name_or_path に Hugging Face のリポジトリ名が指定された場合 (aaaa/bbbb のフォーマットを想定):
     # 指定された revision の ONNX 版 BERT モデルを cache_dir にダウンロードする (既にダウンロード済みの場合は何も行われない)
     if len(pretrained_model_name_or_path.split("/")) == 2:
-
-        hf_hub_download(
-            repo_id=pretrained_model_name_or_path,
-
-            cache_dir=cache_dir,
-            revision=revision,
+        model_path = Path(
+            hf_hub_download(
+                repo_id=pretrained_model_name_or_path,
+                filename="model_fp16.onnx",
+                cache_dir=cache_dir,
+                revision=revision,
+            )
         )
-
         # 英語用 BERT のみ、spm.model もダウンロードする
         # Fast 版の BERT トークナイザーでは不要なはずだが、念のため
         if language == Languages.EN:
@@ -101,12 +100,47 @@ def load_model(
                 cache_dir=cache_dir,
                 revision=revision,
             )
-   
+    # pretrained_model_name_or_path にファイルパスが指定された場合:
+    # 既にダウンロード済みという前提のもと、モデルへのローカルパスを model_path に格納する
+    else:
+        model_path = Path(pretrained_model_name_or_path).resolve() / "model_fp16.onnx"
+
+    # 推論時に一番優先される ExecutionProvider の名前を取得
+    assert len(onnx_providers) > 0
+    first_provider_name = (
+        onnx_providers[0] if type(onnx_providers[0]) is str else onnx_providers[0][0]
+    )
+
+    # 推論セッションの設定
+    sess_options = onnxruntime.SessionOptions()
+    ## ONNX モデルの作成時にすでに onnxsim により最適化されていることから、ロード高速化のため最適化を無効にする
+    sess_options.graph_optimization_level = onnxruntime.GraphOptimizationLevel.ORT_DISABLE_ALL  # fmt: skip
+    ## エラー以外のログを出力しない
+    ## 本来は log_severity_level = 3 だけで効くはずだが、なぜか CUDA 系のログが抑制できないので set_default_logger_severity() も呼び出している
+    sess_options.log_severity_level = 3
+    onnxruntime.set_default_logger_severity(3)
+
+    # CPU 推論時のみ enable_cpu_mem_arena を無効化し、BERT モデルの推論セッションより富豪的なメモリ消費を防止する
+    ## 既に RunOptions の memory.enable_memory_arena_shrinkage や、ProviderOptions の "arena_extend_strategy": "kSameAsRequested" を指定して
+    ## InferenceSession が構築するメモリアリーナを推論後に縮小するよう構成し、メモリアリーナによるメモリ消費量が漸進的に増加することを防いでいる
+    ## しかし、CPU 推論時の BERT モデルに関しては入力長や入力内容次第では依然大量のメモリが確保される傾向にあるため、CPU 推論時のみメモリアリーナ自体を無効化する
+    ## BERT 特徴量の抽出処理が 0.数秒遅くなるトレードオフがあるが、元々 CPU 推論は CUDA 推論よりかなり遅いこと、
+    ## BERT 特徴量の抽出処理自体は音声合成処理よりも遥かに軽量なこと、低メモリ環境での OOM エラー回避の観点から有益だと判断した
+    ## メモリアリーナを無効化することで、若干の速度低下と引き換えに、多量の推論処理を行ってもメモリリークのような挙動が発生しなくなる
+    ## なお CUDA 推論時は独自に VRAM 管理が行われているようで、CPU 推論時のように過剰に VRAM が消費されることはない
+    ## 明示的に enable_cpu_mem_arena が指定されている場合は、指定された値を利用する
+    if enable_cpu_mem_arena is not None:
+        sess_options.enable_cpu_mem_arena = enable_cpu_mem_arena
+    ## 明示的に enable_cpu_mem_arena が指定されていない場合は、推論セッションが CPUExecutionProvider の場合のみメモリアリーナを無効化する
+    elif first_provider_name == "CPUExecutionProvider":
+        sess_options.enable_cpu_mem_arena = False
 
     # BERT モデルをロードし、辞書に格納して返す
     start_time = time.time()
-    __loaded_models[language] = ORTModelForMaskedLM.from_pretrained(
-        pretrained_model_name_or_path,
+    __loaded_models[language] = onnxruntime.InferenceSession(
+        model_path,
+        sess_options=sess_options,
+        providers=onnx_providers,
     )
     logger.info(
         f"Loaded the {language.name} ONNX BERT model from {pretrained_model_name_or_path} ({time.time() - start_time:.2f}s)"
