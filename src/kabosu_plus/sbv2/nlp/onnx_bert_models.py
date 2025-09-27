@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Any, Optional, Union
 
 import onnxruntime
-from optimum.onnxruntime import ORTModel
+from optimum.onnxruntime import ORTModelForSequenceClassification
 from huggingface_hub import hf_hub_download
 from transformers import (
     AutoTokenizer,
@@ -123,7 +123,7 @@ def load_model(
 
     # BERT モデルをロードし、辞書に格納して返す
     start_time = time.time()
-    __loaded_models[language] = ORTModel.load_model(
+    __loaded_models[language] = ORTModelForSequenceClassification(
         pretrained_model_name_or_path,
         providers=onnx_providers,
     )
