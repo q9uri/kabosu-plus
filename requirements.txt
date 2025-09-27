@@ -14,5 +14,3 @@ g2p_en
 onnxruntime; (sys_platform != 'linux' or platform_machine != 'x86_64') and sys_platform != 'win32'
 onnxruntime-directml; sys_platform == 'win32'
 onnxruntime-gpu; sys_platform == 'linux' and platform_machine == 'x86_64'
-optimum @git+https://github.com/huggingface/optimum
-optimum-onnx @git+https://github.com/huggingface/optimum-onnx.git
