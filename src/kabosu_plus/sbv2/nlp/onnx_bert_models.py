@@ -125,7 +125,6 @@ def load_model(
     start_time = time.time()
     __loaded_models[language] = ORTModelForMaskedLM.from_pretrained(
         pretrained_model_name_or_path,
-        providers=onnx_providers,
     )
     logger.info(
         f"Loaded the {language.name} ONNX BERT model from {pretrained_model_name_or_path} ({time.time() - start_time:.2f}s)"

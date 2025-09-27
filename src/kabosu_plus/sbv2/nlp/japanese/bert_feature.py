@@ -46,7 +46,6 @@ def extract_bert_feature_onnx(
     tokenizer = onnx_bert_models.load_tokenizer(Languages.JP)
     session = onnx_bert_models.load_model(
         language=Languages.JP,
-        onnx_providers=onnx_providers,
     )
     input_names = [input.name for input in session.get_inputs()]
     output_name = session.get_outputs()[0].name
