@@ -16,6 +16,7 @@ from pathlib import Path
 from typing import Any, Optional, Union
 
 import onnxruntime
+from optimum.onnxruntime import ORTModel
 from huggingface_hub import hf_hub_download
 from transformers import (
     AutoTokenizer,
@@ -83,27 +84,12 @@ def load_model(
     # pretrained_model_name_or_path に Hugging Face のリポジトリ名が指定された場合 (aaaa/bbbb のフォーマットを想定):
     # 指定された revision の ONNX 版 BERT モデルを cache_dir にダウンロードする (既にダウンロード済みの場合は何も行われない)
     if len(pretrained_model_name_or_path.split("/")) == 2:
-        model_path = Path(
-            hf_hub_download(
-                repo_id=pretrained_model_name_or_path,
-                filename="model_int8.onnx",
-                cache_dir=cache_dir,
-                revision=revision,
-            )
+        hf_hub_download(
+            repo_id=pretrained_model_name_or_path,
+            cache_dir=cache_dir,
+            revision=revision,
         )
-        # 英語用 BERT のみ、spm.model もダウンロードする
-        # Fast 版の BERT トークナイザーでは不要なはずだが、念のため
-        if language == Languages.EN:
-            hf_hub_download(
-                repo_id=pretrained_model_name_or_path,
-                filename="spm.model",
-                cache_dir=cache_dir,
-                revision=revision,
-            )
-    # pretrained_model_name_or_path にファイルパスが指定された場合:
-    # 既にダウンロード済みという前提のもと、モデルへのローカルパスを model_path に格納する
-    else:
-        model_path = Path(pretrained_model_name_or_path).resolve() / "model_int8.onnx"
+
 
     # 推論時に一番優先される ExecutionProvider の名前を取得
     assert len(onnx_providers) > 0
@@ -137,9 +123,8 @@ def load_model(
 
     # BERT モデルをロードし、辞書に格納して返す
     start_time = time.time()
-    __loaded_models[language] = onnxruntime.InferenceSession(
-        model_path,
-        sess_options=sess_options,
+    __loaded_models[language] = ORTModel.load_model(
+        pretrained_model_name_or_path,
         providers=onnx_providers,
     )
     logger.info(
