@@ -86,7 +86,7 @@ def load_model(
         model_path = Path(
             hf_hub_download(
                 repo_id=pretrained_model_name_or_path,
-                filename="model_fp16.onnx",
+                filename="model_int8.onnx",
                 cache_dir=cache_dir,
                 revision=revision,
             )
@@ -103,7 +103,7 @@ def load_model(
     # pretrained_model_name_or_path にファイルパスが指定された場合:
     # 既にダウンロード済みという前提のもと、モデルへのローカルパスを model_path に格納する
     else:
-        model_path = Path(pretrained_model_name_or_path).resolve() / "model_fp16.onnx"
+        model_path = Path(pretrained_model_name_or_path).resolve() / "model_int8.onnx"
 
     # 推論時に一番優先される ExecutionProvider の名前を取得
     assert len(onnx_providers) > 0

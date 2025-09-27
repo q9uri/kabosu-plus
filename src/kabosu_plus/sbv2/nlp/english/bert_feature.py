@@ -65,7 +65,7 @@ def extract_bert_feature_onnx(
     # text から BERT 特徴量を抽出
     io_binding.bind_output(output_name, device_type)
     session.run_with_iobinding(io_binding, run_options=run_options)
-    res = io_binding.get_outputs()[0].numpy()
+    res = io_binding.get_outputs()[0].numpy().astype(np.float32)
 
     style_res_mean = None
     if assist_text:
@@ -86,7 +86,7 @@ def extract_bert_feature_onnx(
         # assist_text から BERT 特徴量を抽出
         io_binding.bind_output(output_name, device_type)
         session.run_with_iobinding(io_binding, run_options=run_options)
-        style_res = io_binding.get_outputs()[0].numpy()
+        style_res = io_binding.get_outputs()[0].numpy().astype(np.float32)
         style_res_mean = np.mean(style_res, axis=0)
 
     assert len(word2ph) == res.shape[0], (text, res.shape[0], len(word2ph))
