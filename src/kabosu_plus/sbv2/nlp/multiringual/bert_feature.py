@@ -46,18 +46,18 @@ def extract_bert_feature_lammacpp(
         language=Languages.MULTI,
     )
 
-    res = model.embed(text).numpy()
+    embed_list = model.embed(text)
+    res = np.array(embed_list, dtype=np.float32)
 
     style_res_mean = None
     if assist_text:
         # 入力をテンソルに変換
         
-        style_res =  res = model.embed(assist_text).numpy()
+        embed_list = model.embed(assist_text)
+        style_res = np.array(embed_list, dtype=np.float32)
         style_res_mean = np.mean(style_res, axis=0)
 
-    zero_array = np.zeros((1024, split_text))
-    zero_array[0] = res
-    res = zero_array
+    res = np.tile(res, (len(split_text), 1))
 
     assert len(word2ph) == len(text) + 2, text
     word2phone = word2ph
