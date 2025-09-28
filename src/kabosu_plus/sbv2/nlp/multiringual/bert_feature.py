@@ -58,7 +58,6 @@ def extract_bert_feature_lammacpp(
 
     zero_array = np.zeros((len(word2ph), 1024), dtype=np.float32)
     #先頭と最後にqwen3埋め込みを入れる
-    zero_array[-1] = res
     zero_array[0] = res
     res = zero_array
 
