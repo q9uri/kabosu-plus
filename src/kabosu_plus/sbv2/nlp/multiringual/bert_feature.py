@@ -46,7 +46,7 @@ def extract_bert_feature_lammacpp(
         language=Languages.MULTI,
     )
 
-    res = model.create_embedding(text).numpy()
+    res = model.embed(text).numpy()
 
     style_res_mean = None
     if assist_text:
