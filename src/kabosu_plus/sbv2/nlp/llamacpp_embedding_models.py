@@ -34,7 +34,7 @@ def load_model(
     cache_dir: Optional[str] = None,
     revision: str = "main",
     enable_cpu_mem_arena: bool | None = None,
-) -> onnxruntime.InferenceSession:  # fmt: skip
+) -> Any:  # fmt: skip
     """
     指定された言語の ONNX 版 BERT モデルをロードし、ロード済みの ONNX 版 BERT モデルを返す。
     一度ロードされていれば、ロード済みの ONNX 版 BERT モデルを即座に返す。

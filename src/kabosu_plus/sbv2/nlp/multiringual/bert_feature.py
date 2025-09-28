@@ -14,7 +14,7 @@ from kabosu_plus.sbv2.nlp.japanese.g2p import text_to_sep_kata
 
 
 
-def extract_bert_feature_onnx(
+def extract_bert_feature_lammacpp(
     text: str,
     word2ph: list[int],
     assist_text: Optional[str] = None,
