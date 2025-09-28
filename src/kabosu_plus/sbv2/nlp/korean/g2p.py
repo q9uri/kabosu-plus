@@ -1,16 +1,20 @@
 import re
 from jamo import h2j, j2hcj
 from g2pk2 import G2p
+import mecab_ko as MeCab
 
-from transformers import AutoTokenizer
+
+from kabosu_plus.sbv2.constants import Languages
+from kabosu_plus.sbv2.nlp import onnx_bert_models
 
 from kabosu_plus.sbv2.nlp.symbols import punctuation
 
 
 _g2p = G2p()
-LOCAL_PATH = "./bert/kcbert-large"
-tokenizer = AutoTokenizer.from_pretrained(LOCAL_PATH)
 
+
+
+tagger = MeCab.Tagger("-Owakati")
 
 rep_map = {
     "/": ",",
@@ -303,7 +307,7 @@ def sep_text(text):
 
 
 def text_to_words(text):
-    tokens = tokenizer.tokenize(text)
+    tokens= tagger.parse("text").split()
     words = []
     word_lens = []
     for idx, t in enumerate(tokens):

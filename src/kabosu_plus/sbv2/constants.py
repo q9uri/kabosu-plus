@@ -19,6 +19,7 @@ class Languages(StrEnum):
     EN = "EN"
     ZH = "ZH"
     KO = "KO"
+    MULTI = "MULTI"
 
 
 # 言語ごとのデフォルトの BERT モデル (ONNX 版) のパス
@@ -26,7 +27,7 @@ DEFAULT_ONNX_BERT_MODEL_PATHS = {
     Languages.JP: BASE_DIR / "weight" / "bert" / "deberta-v2-large-japanese-char-wwm-onnx",
     Languages.EN: BASE_DIR / "weight" / "bert" / "deberta-v3-large-onnx",
     Languages.ZH: BASE_DIR / "weight" / "bert" / "chinese-roberta-wwm-ext-large-onnx",
-    Languages.KO: BASE_DIR / "weight" / "bert" / "kcbert-large-onnx"
+    Languages.MULTI: BASE_DIR / "weight" / "bert" / "qwen3-embedding-0.6b-gguf"
 }
 
 

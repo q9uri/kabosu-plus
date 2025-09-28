@@ -2,9 +2,9 @@ import re
 import sys
 from typing import TypedDict
 
-from kabosu_plus.sbv2.constants import Languages
+
 from kabosu_plus.sbv2.logging import logger
-from kabosu_plus.sbv2.nlp import onnx_bert_models
+
 
 from kabosu_plus import (
     run_frontend,
@@ -96,7 +96,7 @@ def g2p(
     for i in sep_text:
         if i not in PUNCTUATIONS:
             sep_tokenized.append(
-                onnx_bert_models.load_tokenizer(Languages.JP).tokenize(i)
+               ( char for char in range( len(i)) )
             )  # ここでおそらく`i`が文字単位に分割される
         else:
             sep_tokenized.append([i])

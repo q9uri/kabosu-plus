@@ -5,6 +5,7 @@ e2k
 num2words
 g2pk2
 jamo
+mecab_ko
 #chinese g2p
 pypinyin
 jieba
@@ -14,3 +15,4 @@ g2p_en
 onnxruntime; (sys_platform != 'linux' or platform_machine != 'x86_64') and sys_platform != 'win32'
 onnxruntime-directml; sys_platform == 'win32'
 onnxruntime-gpu; sys_platform == 'linux' and platform_machine == 'x86_64'
+numpy<2
