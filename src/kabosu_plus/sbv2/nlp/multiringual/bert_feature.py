@@ -56,7 +56,11 @@ def extract_bert_feature_lammacpp(
         style_res = np.array(embed_list, dtype=np.float32)
         style_res_mean = np.mean(style_res, axis=0)
 
-    res = np.tile(res, (len(word2ph), 1))
+    zero_array = np.zeros((len(word2ph), 1024), dtype=np.float32)
+    #先頭と最後にqwen3埋め込みを入れる
+    zero_array[-1] = res
+    zero_array[0] = res
+    res = zero_array
 
     assert len(word2ph) == len(text) + 2, text
     word2phone = word2ph
