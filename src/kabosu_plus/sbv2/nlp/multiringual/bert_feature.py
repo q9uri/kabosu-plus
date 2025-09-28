@@ -45,34 +45,40 @@ def extract_bert_feature_lammacpp(
         language=Languages.MULTI,
     )
 
-    embed_list = model.embed(text)
-    res = np.array(embed_list, dtype=np.float32)
-
     style_res_mean = None
     if assist_text:
         # 入力をテンソルに変換
         
         embed_list = model.embed(assist_text)
         style_res = np.array(embed_list, dtype=np.float32)
-        style_res_mean = np.mean(style_res, axis=0)
 
-    zero_array = np.zeros((len(word2ph), 1024), dtype=np.float32)
-    #先頭と最後にqwen3埋め込みを入れる
-    zero_array[0] = res
-    res = zero_array
+    embed_list = model.embed(text)
+    res = np.array(embed_list, dtype=np.float32)
+
+    zero_array = np.zeros((1, 1024), dtype=np.float32)
+
 
     assert len(word2ph) == len(text) + 2, text
     word2phone = word2ph
     phone_level_feature = []
     for i in range(len(word2phone)):
-        if assist_text:
-            assert style_res_mean is not None
-            repeat_feature = (
-                np.tile(res[i], (word2phone[i], 1)) * (1 - assist_text_weight)
-                + np.tile(style_res_mean, (word2phone[i], 1)) * assist_text_weight
-            )
+        #先頭と終端のみ埋め込みを入れる
+        if i in (0, len(word2phone)-1 ):
+
+            if assist_text:
+                assert style_res is not None
+                repeat_feature = (
+                    np.tile(res, (word2phone[i], 1)) * (1 - assist_text_weight)
+                    + np.tile(style_res, (word2phone[i], 1)) * assist_text_weight
+                )
+            else:
+                #先頭と終端のみ埋め込みを入れる
+                repeat_feature = np.tile(res, (word2phone[i], 1))
+
         else:
-            repeat_feature = np.tile(res[i], (word2phone[i], 1))
+            #先頭と終端以外は0を入れる
+            repeat_feature = np.tile(zero_array, (word2phone[i], 1))
+
         phone_level_feature.append(repeat_feature)
 
     phone_level_feature = np.concatenate(phone_level_feature, axis=0)
