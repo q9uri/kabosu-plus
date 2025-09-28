@@ -96,7 +96,7 @@ def g2p(
     for i in sep_text:
         if i not in PUNCTUATIONS:
             sep_tokenized.append(
-               ( char for char in range( len(i)) )
+               [ i[char_num] for char_num in range( len(i)) ]
             )  # ここでおそらく`i`が文字単位に分割される
         else:
             sep_tokenized.append([i])
