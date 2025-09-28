@@ -43,7 +43,7 @@ def extract_bert_feature_lammacpp(
 
     # モデルの読み込み
     model = llamacpp_embedding_models.load_model(
-        language=Languages.KO,
+        language=Languages.MULTI,
     )
 
     res = model.embed(text).numpy()
