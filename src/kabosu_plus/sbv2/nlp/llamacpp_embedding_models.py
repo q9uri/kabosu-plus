@@ -93,6 +93,7 @@ def load_model(
         model_path=model_path,
         embedding=True,
         flash_attn=True,
+        n_gpu_layers=-1
     )
     logger.info(
         f"Loaded the {language.name} ONNX BERT model from {pretrained_model_name_or_path} ({time.time() - start_time:.2f}s)"
