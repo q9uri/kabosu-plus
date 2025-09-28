@@ -90,7 +90,7 @@ def load_model(
     # BERT モデルをロードし、辞書に格納して返す
     start_time = time.time()
     __loaded_models[language] = Llama(
-        model_path=model_path,
+        model_path=str(model_path), #stringでないと読まない
         embedding=True,
         flash_attn=True,
         n_gpu_layers=-1
