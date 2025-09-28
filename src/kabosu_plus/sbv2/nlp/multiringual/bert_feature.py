@@ -36,8 +36,7 @@ def extract_bert_feature_lammacpp(
 
     # 各単語が何文字かを作る `word2ph` を使う必要があるので、読めない文字は必ず無視する
     # でないと `word2ph` の結果とテキストの文字数結果が整合性が取れない
-    split_text = text_to_sep_kata(text, raise_yomi_error=False)[0]
-    text = "".join(split_text)
+    text = "".join(text_to_sep_kata(text, raise_yomi_error=False)[0])
     if assist_text:
         assist_text = "".join(text_to_sep_kata(assist_text, raise_yomi_error=False)[0])
 
@@ -57,7 +56,7 @@ def extract_bert_feature_lammacpp(
         style_res = np.array(embed_list, dtype=np.float32)
         style_res_mean = np.mean(style_res, axis=0)
 
-    res = np.tile(res, (len(split_text), 1))
+    res = np.tile(res, (len(word2ph), 1))
 
     assert len(word2ph) == len(text) + 2, text
     word2phone = word2ph
