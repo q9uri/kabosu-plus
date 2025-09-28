@@ -31,7 +31,6 @@ __loaded_models: dict[Languages, Any] = {}
 def load_model(
     language: Languages,
     pretrained_model_name_or_path: Optional[str] = None,
-    onnx_providers: Sequence[Union[str, tuple[str, dict[str, Any]]]] = [("CPUExecutionProvider", {"arena_extend_strategy": "kSameAsRequested"})],
     cache_dir: Optional[str] = None,
     revision: str = "main",
     enable_cpu_mem_arena: bool | None = None,
@@ -76,7 +75,7 @@ def load_model(
         model_path = Path(
             hf_hub_download(
                 repo_id=pretrained_model_name_or_path,
-                filename="model_fp16.onnx",
+                filename="qwen3-embedding-0.6b-q4_k_m.gguf",
                 cache_dir=cache_dir,
                 revision=revision,
             )
@@ -85,7 +84,7 @@ def load_model(
     # pretrained_model_name_or_path にファイルパスが指定された場合:
     # 既にダウンロード済みという前提のもと、モデルへのローカルパスを model_path に格納する
     else:
-        model_path = Path(pretrained_model_name_or_path).resolve() / "model_fp16.onnx"
+        model_path = Path(pretrained_model_name_or_path).resolve() / "qwen3-embedding-0.6b-q4_k_m.gguf"
 
 
     # BERT モデルをロードし、辞書に格納して返す

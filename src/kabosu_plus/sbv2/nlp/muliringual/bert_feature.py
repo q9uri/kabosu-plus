@@ -17,7 +17,6 @@ from kabosu_plus.sbv2.nlp.japanese.g2p import text_to_sep_kata
 def extract_bert_feature_onnx(
     text: str,
     word2ph: list[int],
-    onnx_providers: Sequence[Union[str, tuple[str, dict[str, Any]]]],
     assist_text: Optional[str] = None,
     assist_text_weight: float = 0.7,
 ) -> NDArray[Any]:
