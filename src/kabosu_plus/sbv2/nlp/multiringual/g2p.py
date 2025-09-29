@@ -34,4 +34,4 @@ def g2p(text: str,
 
         phones, tones, word2ph = g2p_zh.g2p(text=text)
 
-        return Languages.ZH, norm_text, phones, tones, word2ph, None, None, None
+        return Languages.ZH, phones, tones, word2ph, None, None, None
