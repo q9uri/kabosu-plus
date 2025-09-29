@@ -3,7 +3,7 @@ from jamo import h2j, j2hcj
 from g2pk2 import G2p
 import mecab_ko as MeCab
 
-from kabosu_plus.sbv2.nlp.symbols import punctuation
+from kabosu_plus.sbv2.nlp.symbols import PUNCTUATIONS
 
 
 _g2p = G2p()
@@ -325,7 +325,7 @@ def replace_unk(words, text):
                 continue
             if (loc == 0):
                 temp = text[:text.find(words[loc+1])].strip()
-                if (temp[-1] in punctuation and words[loc+1] in punctuation):
+                if (temp[-1] in PUNCTUATIONS and words[loc+1] in PUNCTUATIONS):
                     words[loc] = temp[:-1]
                 else:
                     words[loc] = temp
@@ -336,7 +336,7 @@ def replace_unk(words, text):
 
             if (words[loc+1] != "[UNK]" and words[loc-1] != "[UNK]"):
                 temp = text[text.find(words[loc-1])+len(words[loc-1]):text.find(words[loc-1])+text[text.find(words[loc-1]):].find(words[loc+1])].strip()
-                if (temp[-1] in punctuation and words[loc+1] in punctuation):
+                if (temp[-1] in PUNCTUATIONS and words[loc+1] in PUNCTUATIONS):
                     words[loc] = temp[:-1]
                 else:
                     words[loc] = temp
@@ -361,7 +361,7 @@ def g2p(text):
     words = replace_unk(words, norm_text)
     # print(words)
     for word in words:
-        if word in punctuation:
+        if word in PUNCTUATIONS:
             phones.append(word)
             tones.append(0)
             phone_len.append(1)
