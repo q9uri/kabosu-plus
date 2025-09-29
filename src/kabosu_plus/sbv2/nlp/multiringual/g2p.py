@@ -45,4 +45,11 @@ def g2p(text: str,
         sep_kata = None
         sep_kata_with_joshi = None
 
+    elif language == Languages.KO:
+        from kabosu_plus.sbv2.nlp.korean import g2p as g2p_ko
+        norm_text, phones, tones, word2ph = g2p_ko.g2p(text=text)
+        sep_text = None
+        sep_kata = None
+        sep_kata_with_joshi = None
+
     return language, norm_text, phones, tones, word2ph, sep_text, sep_kata ,sep_kata_with_joshi

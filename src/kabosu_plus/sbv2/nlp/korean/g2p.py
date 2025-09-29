@@ -3,10 +3,6 @@ from jamo import h2j, j2hcj
 from g2pk2 import G2p
 import mecab_ko as MeCab
 
-
-from kabosu_plus.sbv2.constants import Languages
-from kabosu_plus.sbv2.nlp import onnx_bert_models
-
 from kabosu_plus.sbv2.nlp.symbols import punctuation
 
 
@@ -282,7 +278,7 @@ def divide_hangul(text):
     return text
 
 
-def text_normalize(text):
+def normalize_text(text):
     text = replace_punctuation(text)
     text = normalize_numbers(text)
     text = number_to_hangul(text)
@@ -356,12 +352,13 @@ def replace_unk(words, text):
         return words
 
 def g2p(text):
+    norm_text = normalize_text(text)
     phones = []
     tones = []
     phone_len = []
-    words, word_lens = text_to_words(text)
+    words, word_lens = text_to_words(norm_text)
     # print(words)
-    words = replace_unk(words, text)
+    words = replace_unk(words, norm_text)
     # print(words)
     for word in words:
         if word in punctuation:
@@ -382,10 +379,10 @@ def g2p(text):
     phones = ["_"] + phones + ["_"]
     tones = [0] + tones + [0]
     word2ph = [1] + word2ph + [1]
-    assert len(phones) == len(tones), text
-    assert len(phones) == sum(word2ph), text
+    assert len(phones) == len(tones), norm_text
+    assert len(phones) == sum(word2ph), norm_text
 
-    return phones, tones, word2ph
+    return norm_text, phones, tones, word2ph
 
 
 if __name__ == "__main__":
@@ -395,7 +392,7 @@ if __name__ == "__main__":
     # print(g2p("In this paper, we propose 1 DSPGAN, a GAN-based universal vocoder."))
 
 
-    print(g2p(text_normalize("그는 미인 대회 도전이라는 새로운 꿈을 품게 됐고 학교의 허락을 받아내 대회에 출전 ‘미스 콜로라도’로 뽑혔다.")))
+    print(g2p(normalize_text("그는 미인 대회 도전이라는 새로운 꿈을 품게 됐고 학교의 허락을 받아내 대회에 출전 ‘미스 콜로라도’로 뽑혔다.")))
     
     
     # all_phones = set()
