@@ -5,6 +5,7 @@ def g2p(text: str,
         keihan: bool = False,
         babytalk: bool = False, 
         dakuten: bool = False,
+        use_jp_extra: bool = False,
         language_list:list[Languages] = [Languages.JP],
         ) -> tuple[Languages, str, list[str], list[int], list[int], list[str] | None, list[str] | None, list[str] | None]:
 
@@ -20,7 +21,12 @@ def g2p(text: str,
     if language == Languages.JP:
 
         from kabosu_plus.sbv2.nlp.japanese import g2p as g2p_ja
-        norm_text, phones, tones, word2ph, sep_text, sep_kata ,sep_kata_with_joshi = g2p_ja.g2p(norm_text=text, keihan=keihan, babytalk=babytalk, dakuten=dakuten)
+        norm_text, phones, tones, word2ph, sep_text, sep_kata ,sep_kata_with_joshi = g2p_ja.g2p(norm_text=text,
+                                                                                                keihan=keihan,
+                                                                                                babytalk=babytalk,
+                                                                                                dakuten=dakuten,
+                                                                                                use_jp_extra=use_jp_extra
+                                                                                                )
         return Languages.JP, norm_text, phones, tones, word2ph, sep_text, sep_kata ,sep_kata_with_joshi
 
     elif language == Languages.EN:
