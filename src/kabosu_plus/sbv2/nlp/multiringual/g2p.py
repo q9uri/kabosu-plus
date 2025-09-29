@@ -24,6 +24,8 @@ def g2p(text: str,
     
     elif language == Languages.ZH:
         from kabosu_plus.sbv2.nlp.chinese import g2p as g2p_zh
-        phones, tones, word2ph = g2p_zh.g2p(text=text)
+        from kabosu_plus.sbv2.nlp.chinese import normalizer  
+        norm_text = normalizer.normalize_text(text)
+        phones, tones, word2ph = g2p_zh.g2p(text=norm_text)
 
         return Languages.ZH, phones, tones, word2ph, None, None, None
