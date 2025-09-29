@@ -5,7 +5,7 @@ def g2p(text: str,
         keihan: bool = False,
         babytalk: bool = False, 
         dakuten: bool = False,
-        language_list:list[Languages] = Languages.JP,
+        language_list:list[Languages] = [Languages.JP],
         ) -> tuple[Languages, list[str], list[int], list[int], list[str] | None, list[str] | None, list[str] | None]:
 
     if len(language_list) == 1:
