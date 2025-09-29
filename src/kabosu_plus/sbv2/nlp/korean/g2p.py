@@ -1,6 +1,6 @@
 import re
 from jamo import h2j, j2hcj
-from g2pk2 import G2p
+from g2pk3 import G2p
 import mecab_ko as MeCab
 
 from kabosu_plus.sbv2.nlp.symbols import PUNCTUATIONS

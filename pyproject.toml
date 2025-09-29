@@ -7,7 +7,7 @@ requires-python = ">=3.10"
 dependencies = [
     "e2k>=0.6.2",
     "g2p-en>=2.1.0",
-    "g2pk2>=0.0.3",
+    "g2pk3",
     "jaconv>=0.4.0",
     "jamo>=0.4.1",
     "jieba>=0.42.1",
@@ -51,6 +51,7 @@ yomikata = { git = "https://github.com/q9uri/yomikata", rev = "e0d23496dd17b1b97
 optimum = { git = "https://github.com/huggingface/optimum" }
 optimum-onnx = { git = "https://github.com/huggingface/optimum-onnx.git" }
 kabosu-core = { git = "https://github.com/q9uri/kabosu-core", rev = "f66e09f5ac7c8f7fa47f2861396410746370f9bc" }
+g2pk3 = { git = "https://github.com/q9uri/g2pk3", rev = "9ca44dc7aa0a01d09be06bdc2197d9974685367e" }
 
 [build-system]
 requires = ["hatchling"]

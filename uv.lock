@@ -808,15 +808,13 @@ wheels = [
 ]
 
 [[package]]
-name = "g2pk2"
-version = "0.0.3"
-source = { registry = "https://pypi.org/simple" }
+name = "g2pk3"
+version = "0.0.1"
+source = { git = "https://github.com/q9uri/g2pk3?rev=9ca44dc7aa0a01d09be06bdc2197d9974685367e#9ca44dc7aa0a01d09be06bdc2197d9974685367e" }
 dependencies = [
     { name = "jamo" },
+    { name = "mecab-ko" },
     { name = "nltk" },
-]
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/53/52/6b77a9c3e4ea32dfb53238422dabf4fa977681d2bf4087bff53c084ab7c5/g2pk2-0.0.3-py3-none-any.whl", hash = "sha256:e708316125248c10432cbead85cf52dd9ed252c423cce531f9df617386978cf2", size = 25716, upload-time = "2023-08-18T17:05:33.705Z" },
 ]
 
 [[package]]
@@ -1139,7 +1137,7 @@ source = { editable = "." }
 dependencies = [
     { name = "e2k" },
     { name = "g2p-en" },
-    { name = "g2pk2" },
+    { name = "g2pk3" },
     { name = "jaconv" },
     { name = "jamo" },
     { name = "jieba" },
@@ -1169,7 +1167,7 @@ dev = [
 requires-dist = [
     { name = "e2k", specifier = ">=0.6.2" },
     { name = "g2p-en", specifier = ">=2.1.0" },
-    { name = "g2pk2", specifier = ">=0.0.3" },
+    { name = "g2pk3", git = "https://github.com/q9uri/g2pk3?rev=9ca44dc7aa0a01d09be06bdc2197d9974685367e" },
     { name = "jaconv", specifier = ">=0.4.0" },
     { name = "jamo", specifier = ">=0.4.1" },
     { name = "jieba", specifier = ">=0.42.1" },
