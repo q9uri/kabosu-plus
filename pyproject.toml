@@ -15,8 +15,9 @@ dependencies = [
     "kabosu-core",
     "kanalizer>=0.1.1",
     "marine-plus>=0.0.6.post3",
+    "mecab-ko>=1.0.2",
     "num2words>=0.5.14",
-    "numpy==1.26.4",
+    "numpy<2",
     "onnxruntime>=1.22.1",
     "onnxruntime>=1.22.1 ; (platform_machine != 'x86_64' and sys_platform == 'linux') or (sys_platform != 'linux' and sys_platform != 'win32')",
     "onnxruntime-directml>=1.22.0 ; sys_platform == 'win32'",
@@ -47,9 +48,9 @@ packages = ["src/kabosu_plus"]
 
 [tool.uv.sources]
 yomikata = { git = "https://github.com/q9uri/yomikata", rev = "e0d23496dd17b1b97a2a91bef08a41f77d3932d8" }
-kabosu-core = { git = "https://github.com/q9uri/kabosu-core", rev = "f66e09f5ac7c8f7fa47f2861396410746370f9bc" }
 optimum = { git = "https://github.com/huggingface/optimum" }
 optimum-onnx = { git = "https://github.com/huggingface/optimum-onnx.git" }
+kabosu-core = { git = "https://github.com/q9uri/kabosu-core", rev = "f66e09f5ac7c8f7fa47f2861396410746370f9bc" }
 
 [build-system]
 requires = ["hatchling"]
