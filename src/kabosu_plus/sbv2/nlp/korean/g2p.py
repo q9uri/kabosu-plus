@@ -303,7 +303,7 @@ def sep_text(text):
 
 
 def text_to_words(text):
-    tokens= tagger.parse("text").split()
+    tokens= tagger.parse(text).split()
     words = []
     word_lens = []
     for idx, t in enumerate(tokens):
