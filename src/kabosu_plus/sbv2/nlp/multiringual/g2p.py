@@ -20,18 +20,18 @@ def g2p(text: str,
     if language == Languages.JP:
 
         from kabosu_plus.sbv2.nlp.japanese import g2p as g2p_ja
-        phones, tones, word2ph, sep_text, sep_kata ,sep_kata_with_joshi = g2p_ja.g2p(norm_text=text, keihan=keihan, babytalk=babytalk, dakuten=dakuten)
-        return Languages.JP, phones, tones, word2ph, sep_text, sep_kata ,sep_kata_with_joshi
+        norm_text, phones, tones, word2ph, sep_text, sep_kata ,sep_kata_with_joshi = g2p_ja.g2p(norm_text=text, keihan=keihan, babytalk=babytalk, dakuten=dakuten)
+        return Languages.JP, norm_text, phones, tones, word2ph, sep_text, sep_kata ,sep_kata_with_joshi
 
     elif language == Languages.EN:
         from kabosu_plus.sbv2.nlp.english import g2p as g2p_en 
 
-        phones, tones, word2ph = g2p_en.g2p(text=text)
-        return Languages.EN, phones, tones, word2ph, None, None, None
+        norm_text,  phones, tones, word2ph = g2p_en.g2p(text=text)
+        return Languages.EN, norm_text, phones, tones, word2ph, None, None, None
     
     elif language == Languages.ZH:
         from kabosu_plus.sbv2.nlp.chinese import g2p as g2p_zh
 
-        phones, tones, word2ph = g2p_zh.g2p(text=text)
+        norm_text, phones, tones, word2ph = g2p_zh.g2p(text=text)
 
-        return Languages.ZH, phones, tones, word2ph, None, None, None
+        return Languages.ZH, norm_text, phones, tones, word2ph, None, None, None

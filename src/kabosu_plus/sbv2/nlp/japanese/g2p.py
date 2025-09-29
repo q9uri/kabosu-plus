@@ -25,7 +25,7 @@ def g2p(
     keihan:bool = False,
     babytalk:bool = False,
     dakuten:bool = False,
-) -> tuple[list[str], list[int], list[int], list[str], list[str], list[str]]:
+) -> tuple[str, list[str], list[int], list[int], list[str], list[str], list[str]]:
     """
     他で使われるメインの関数。`normalize_text()` で正規化された `norm_text` を受け取り、
     - phones: 音素のリスト（ただし `!` や `,` や `.` など punctuation が含まれうる）
@@ -121,7 +121,7 @@ def g2p(
     if not use_jp_extra:
         phones = [phone if phone != "N" else "n" for phone in phones]
 
-    return phones, tones, word2ph, sep_text, sep_kata, sep_kata_with_joshi
+    return norm_text, phones, tones, word2ph, sep_text, sep_kata, sep_kata_with_joshi
 
 
 def text_to_sep_kata(

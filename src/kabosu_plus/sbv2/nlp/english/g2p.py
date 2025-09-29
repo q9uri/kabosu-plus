@@ -88,7 +88,7 @@ eng_dict = get_dict()
 short_form_dict = get_shortform_dict()
 
 
-def g2p(text: str) -> tuple[list[str], list[int], list[int]]:
+def g2p(text: str) -> tuple[str, list[str], list[int], list[int]]:
     norm_text = normalize_text(text)
     phones = []
     tones = []
@@ -142,7 +142,7 @@ def g2p(text: str) -> tuple[list[str], list[int], list[int]]:
     assert len(phones) == len(tones), norm_text
     assert len(phones) == sum(word2ph), norm_text
 
-    return phones, tones, word2ph
+    return norm_text, phones, tones, word2ph
 
 
 def __post_replace_ph(ph: str) -> str:
