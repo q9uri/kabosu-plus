@@ -7,7 +7,7 @@ import re
 JAPANESE_PATTERN = re.compile(r"[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF\u3400-\u4DBF\u3005]+")
 CHINESE_PATTERN = re.compile(r"[\u4e00-\u9fa5]+")
 
-def languge_selector(
+def language_selector(
         text:str,
         supported_languge:Literal[Languages] = Languages.JP,
         ) -> Languages:

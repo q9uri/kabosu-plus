@@ -8,9 +8,9 @@ from numpy.typing import NDArray
 
 from kabosu_plus.sbv2.constants import Languages
 from kabosu_plus.sbv2.nlp import llamacpp_embedding_models
-from kabosu_plus.sbv2.nlp.japanese.g2p import text_to_sep_kata
+from kabosu_plus.sbv2.nlp import onnx_bert_models
 
-
+from kabosu_plus.sbv2.nlp import language_selector
 
 
 def extract_bert_feature_lammacpp(
@@ -49,8 +49,16 @@ def extract_bert_feature_lammacpp(
 
     zero_array = np.zeros((1, 1024), dtype=np.float32)
 
+    language_type = language_selector(text, [Languages.JP, Languages.ZH, Languages.EN])
+    
+    if language_type in ("JP", "ZH"):
+        assert len(word2ph) == len(text) + 2, text
+    
+    elif language_type == "EN":
+        tokenizer = onnx_bert_models.load_tokenizer(Languages.EN)
+        tokens = tokenizer.tokenize(text)
+        assert len(word2ph) == len(tokens), (text, tokens, len(word2ph))
 
-    assert len(word2ph) == len(text) + 2, text
 
     phone_level_feature = []
     for i in range(len(word2ph)):
