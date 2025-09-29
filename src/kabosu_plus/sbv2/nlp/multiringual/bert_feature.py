@@ -49,7 +49,7 @@ def extract_bert_feature_lammacpp(
 
     zero_array = np.zeros((1, 1024), dtype=np.float32)
 
-    language_type = language_selector(text, [Languages.JP, Languages.ZH, Languages.EN])
+    language_type = language_selector(text, [Languages.JP, Languages.ZH, Languages.EN, Languages.KO])
     
     if language_type in ("JP", "ZH"):
         assert len(word2ph) == len(text) + 2, text
@@ -58,7 +58,12 @@ def extract_bert_feature_lammacpp(
         tokenizer = onnx_bert_models.load_tokenizer(Languages.EN)
         tokens = tokenizer.tokenize(text)
         assert len(word2ph) == len(tokens) +2 , (text, tokens, len(word2ph), len(tokens))
-
+    
+    elif language_type == "KO":
+        import mecab_ko as MeCab
+        tagger = MeCab.Tagger("-Owakati")
+        tokens = tagger.parse(text)
+        assert len(word2ph) == len(tokens) +2 , (text, tokens, len(word2ph), len(tokens))
 
     phone_level_feature = []
     for i in range(len(word2ph)):
