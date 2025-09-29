@@ -62,7 +62,7 @@ def extract_bert_feature_lammacpp(
     elif language_type == "KO":
         import mecab_ko as MeCab
         tagger = MeCab.Tagger("-Owakati")
-        tokens = tagger.parse(text)
+        tokens = tagger.parse(text).split()
         assert len(word2ph) == len(tokens) +2 , (text, tokens, len(word2ph), len(tokens))
 
     phone_level_feature = []
