@@ -57,7 +57,7 @@ def extract_bert_feature_lammacpp(
     elif language_type == "EN":
         tokenizer = onnx_bert_models.load_tokenizer(Languages.EN)
         tokens = tokenizer.tokenize(text)
-        assert len(word2ph) == len(tokens), (text, tokens, len(word2ph))
+        assert len(word2ph) == len(tokens) +2 , (text, tokens, len(word2ph), len(tokens))
 
 
     phone_level_feature = []
