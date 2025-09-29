@@ -7,6 +7,13 @@ import re
 JAPANESE_PATTERN = re.compile(r"[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF\u3400-\u4DBF\u3005]+")
 CHINESE_PATTERN = re.compile(r"[\u4e00-\u9fa5]+")
 
+HANGUL_SYLLABLES = r"\uac00-\ud7a3"
+HANGUL_JAMO = r"\u1100-\u11ff"
+HANGUL_COMPTIBILITY_JAMO = r"\u3131-\u318e"
+KOREAN_CHAR = HANGUL_SYLLABLES + HANGUL_JAMO + HANGUL_COMPTIBILITY_JAMO
+
+KOREAN_PATTERN = re.compile(rf"[{KOREAN_CHAR}]+")
+
 def language_selector(
         text:str,
         supported_languge:Literal[Languages] = Languages.JP,
@@ -23,6 +30,12 @@ def language_selector(
     elif JAPANESE_PATTERN.match(text):
         lang = Languages.JP
 
+    elif KOREAN_PATTERN.match(text):
+        if "KO" in supported_languge:
+            lang = Languages.KO
+        else:
+            lang = Languages.JP
+    
     else:
         if "EN" in supported_languge:
             lang = Languages.EN

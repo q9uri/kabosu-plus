@@ -12,7 +12,7 @@ def g2p(text: str,
     if len(language_list) == 1:
         language = language_list[0] 
         if language == Languages.MULTI:
-            language = language_selector(text, [Languages.EN, Languages.JP, Languages.ZH])
+            language = language_selector(text, [Languages.EN, Languages.JP, Languages.ZH, Languages.KO])
 
     else:
         language = language_selector(text, language_list)
