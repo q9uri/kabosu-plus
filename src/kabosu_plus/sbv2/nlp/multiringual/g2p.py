@@ -1,4 +1,4 @@
-from kabosu_plus.sbv2.nlp import languge_selector
+from kabosu_plus.sbv2.nlp import language_selector
 from kabosu_plus.sbv2.constants import Languages
 
 def g2p(text: str,
@@ -11,10 +11,10 @@ def g2p(text: str,
     if len(language_list) == 1:
         language = language_list[0] 
         if language == Languages.MULTI:
-            language = languge_selector(text, [Languages.EN, Languages.JP, Languages.ZH])
+            language = language_selector(text, [Languages.EN, Languages.JP, Languages.ZH])
 
     else:
-        language = languge_selector(text, language_list)
+        language = language_selector(text, language_list)
         
    
     if language == Languages.JP:
