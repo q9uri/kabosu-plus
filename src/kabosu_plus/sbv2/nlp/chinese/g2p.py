@@ -5,6 +5,7 @@ import jieba.posseg as psg
 from pypinyin import Style, lazy_pinyin
 
 from kabosu_plus.sbv2.nlp.chinese.tone_sandhi import ToneSandhi
+from kabosu_plus.sbv2.nlp.chinese.normalizer import normalize_text  
 from kabosu_plus.sbv2.nlp.symbols import PUNCTUATIONS
 
 
@@ -15,11 +16,12 @@ with open(Path(__file__).parent / "opencpop-strict.txt", encoding="utf-8") as f:
 
 
 def g2p(text: str) -> tuple[list[str], list[int], list[int]]:
+    norm_text = normalize_text(text)
     pattern = r"(?<=[{0}])\s*".format("".join(PUNCTUATIONS))
-    sentences = [i for i in re.split(pattern, text) if i.strip() != ""]
+    sentences = [i for i in re.split(pattern, norm_text) if i.strip() != ""]
     phones, tones, word2ph = __g2p(sentences)
     assert sum(word2ph) == len(phones)
-    assert len(word2ph) == len(text)  # Sometimes it will crash,you can add a try-catch.
+    assert len(word2ph) == len(norm_text)  # Sometimes it will crash,you can add a try-catch.
     phones = ["_"] + phones + ["_"]
     tones = [0] + tones + [0]
     word2ph = [1] + word2ph + [1]
