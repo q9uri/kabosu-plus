@@ -4,11 +4,26 @@ from g2pk3 import G2p
 import mecab_ko as MeCab
 
 from kabosu_plus.sbv2.nlp.symbols import PUNCTUATIONS
-
+from kabosu_plus.sbv2.nlp.symbols_ko import HANGUL_CONVERT_LIST, KO_SYMBOLS 
+from kabosu_plus.sbv2.nlp import YomiError
+from kabosu_plus.sbv2.logging import logger
 
 _g2p = G2p()
 
+def replace_unknown_mora(phones: list[str], raise_yomi_error: bool = False) -> list[str]:
+    new_phones = []
+    for phone in phones:
+        if phone not in KO_SYMBOLS:
+            if raise_yomi_error:
+                raise YomiError(f"unknown phone: {phone}")
+            else:
+                phone = "'"
+            logger.warning(
+                    f'Cannot read unknown {phone}, replaced with "\'"'
+                )
+        new_phones.append(phone)
 
+    return new_phones
 
 tagger = MeCab.Tagger("-Owakati")
 
@@ -54,33 +69,6 @@ rep_map = {
     "」": "'",
 }
 
-# List of (hangul, hangul divided) pairs:
-_hangul_divided = [(re.compile('%s' % x[0]), x[1]) for x in [
-    # ('ㄳ', 'ㄱㅅ'),   # g2pk2, A Syllable-ending Rule
-    # ('ㄵ', 'ㄴㅈ'),
-    # ('ㄶ', 'ㄴㅎ'),
-    # ('ㄺ', 'ㄹㄱ'),
-    # ('ㄻ', 'ㄹㅁ'),
-    # ('ㄼ', 'ㄹㅂ'),
-    # ('ㄽ', 'ㄹㅅ'),
-    # ('ㄾ', 'ㄹㅌ'),
-    # ('ㄿ', 'ㄹㅍ'),
-    # ('ㅀ', 'ㄹㅎ'),
-    # ('ㅄ', 'ㅂㅅ'),
-    ('ㅘ', 'ㅗㅏ'),
-    ('ㅙ', 'ㅗㅐ'),
-    ('ㅚ', 'ㅗㅣ'),
-    ('ㅝ', 'ㅜㅓ'),
-    ('ㅞ', 'ㅜㅔ'),
-    ('ㅟ', 'ㅜㅣ'),
-    ('ㅢ', 'ㅡㅣ'),
-    ('ㅑ', 'ㅣㅏ'),
-    ('ㅒ', 'ㅣㅐ'),
-    ('ㅕ', 'ㅣㅓ'),
-    ('ㅖ', 'ㅣㅔ'),
-    ('ㅛ', 'ㅣㅗ'),
-    ('ㅠ', 'ㅣㅜ')
-]]
 
 _latin_to_hangul = [(re.compile('%s' % x[0], re.IGNORECASE), x[1]) for x in [
     ('a', '에이'),
@@ -253,7 +241,7 @@ def normalize_numbers(text):
 
 def latin_to_hangul(text):
     for regex, replacement in _latin_to_hangul:
-        text = re.sub(regex, replacement, text)
+        text = text.replace(regex, replacement)
     return text
 
 
@@ -273,8 +261,8 @@ def fix_g2pk2_error(text):
 
 def divide_hangul(text):
     text = j2hcj(h2j(text))
-    for regex, replacement in _hangul_divided:
-        text = re.sub(regex, replacement, text)
+    for regex, replacement in HANGUL_CONVERT_LIST:
+        text = text.replace(regex, replacement)
     return text
 
 
@@ -351,7 +339,7 @@ def replace_unk(words, text):
     else:
         return words
 
-def g2p(text):
+def g2p(text: str, raise_yomi_error: bool = False):
     norm_text = normalize_text(text)
     phones = []
     tones = []
@@ -370,6 +358,8 @@ def g2p(text):
             phones += temp_phones
             tones += [0]*len(temp_phones)
             phone_len.append(len(temp_phones))
+
+    replace_unknown_mora(phones=phones, raise_yomi_error=raise_yomi_error)
 
     word2ph = []
     for wl, pl in zip(word_lens, phone_len):
@@ -392,7 +382,7 @@ if __name__ == "__main__":
     # print(g2p("In this paper, we propose 1 DSPGAN, a GAN-based universal vocoder."))
 
 
-    print(g2p(normalize_text("그는 미인 대회 도전이라는 새로운 꿈을 품게 됐고 학교의 허락을 받아내 대회에 출전 ‘미스 콜로라도’로 뽑혔다.")))
+    print(g2p("그는 미인 대회 도전이라는 새로운 꿈을 품게 됐고 학교의 허락을 받아내 대회에 출전 ‘미스 콜로라도’로 뽑혔다."))
     
     
     # all_phones = set()

@@ -1,5 +1,5 @@
 import re
-import sys
+from kabosu_plus.sbv2.nlp import YomiError
 from typing import TypedDict
 
 
@@ -860,10 +860,3 @@ def __distribute_phone(n_phone: int, n_word: int) -> list[int]:
 
     return phones_per_word
 
-
-class YomiError(Exception):
-    """
-    OpenJTalk で、読みが正しく取得できない箇所があるときに発生する例外。
-    基本的に「学習の前処理のテキスト処理時」には発生させ、そうでない場合は、
-    raise_yomi_error=False にしておいて、この例外を発生させないようにする。
-    """

@@ -88,7 +88,7 @@ eng_dict = get_dict()
 short_form_dict = get_shortform_dict()
 
 
-def g2p(text: str) -> tuple[str, list[str], list[int], list[int]]:
+def g2p(text: str, raise_yomi_error: bool = False) -> tuple[str, list[str], list[int], list[int]]:
     norm_text = normalize_text(text)
     phones = []
     tones = []

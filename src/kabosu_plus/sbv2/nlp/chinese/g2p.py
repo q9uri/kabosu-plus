@@ -15,7 +15,7 @@ with open(Path(__file__).parent / "opencpop-strict.txt", encoding="utf-8") as f:
     }
 
 
-def g2p(text: str) -> tuple[str, list[str], list[int], list[int]]:
+def g2p(text: str, raise_yomi_error: bool = False) -> tuple[str, list[str], list[int], list[int]]:
     norm_text = normalize_text(text)
     pattern = r"(?<=[{0}])\s*".format("".join(PUNCTUATIONS))
     sentences = [i for i in re.split(pattern, norm_text) if i.strip() != ""]

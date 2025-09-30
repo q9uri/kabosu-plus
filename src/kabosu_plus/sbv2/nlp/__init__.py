@@ -44,3 +44,10 @@ def language_selector(
 
     return lang
     
+
+class YomiError(Exception):
+    """
+    OpenJTalk で、読みが正しく取得できない箇所があるときに発生する例外。
+    基本的に「学習の前処理のテキスト処理時」には発生させ、そうでない場合は、
+    raise_yomi_error=False にしておいて、この例外を発生させないようにする。
+    """
