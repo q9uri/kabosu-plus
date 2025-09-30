@@ -70,7 +70,7 @@ rep_map = {
 }
 
 
-_latin_to_hangul = [(re.compile('%s' % x[0], re.IGNORECASE), x[1]) for x in [
+_latin_to_hangul = [
     ('a', '에이'),
     ('b', '비'),
     ('c', '시'),
@@ -97,7 +97,7 @@ _latin_to_hangul = [(re.compile('%s' % x[0], re.IGNORECASE), x[1]) for x in [
     ('x', '엑스'),
     ('y', '와이'),
     ('z', '제트')
-]]
+]
 
 
 def replace_punctuation(text):
