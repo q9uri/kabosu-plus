@@ -9,11 +9,11 @@ from kabosu_plus.sbv2.nlp import YomiError
 from kabosu_plus.sbv2.logging import logger
 
 _g2p = G2p()
-
+_KO_PHONES = KO_SYMBOLS + PUNCTUATIONS
 def replace_unknown_mora(phones: list[str], raise_yomi_error: bool = False) -> list[str]:
     new_phones = []
     for phone in phones:
-        if phone not in KO_SYMBOLS:
+        if phone not in _KO_PHONES:
             if raise_yomi_error:
                 raise YomiError(f"unknown phone: {phone}")
             else:
