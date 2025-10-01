@@ -1,16 +1,32 @@
 import re
 from jamo import h2j, j2hcj
-from g2pk2 import G2p
+from g2pk3 import G2p
+import mecab_ko as MeCab
 
-from transformers import AutoTokenizer
-
-from kabosu_plus.sbv2.nlp.symbols import punctuation
-
+from kabosu_plus.sbv2.nlp.symbols import PUNCTUATIONS
+from kabosu_plus.sbv2.nlp.symbols_ko import HANGUL_CONVERT_LIST, KO_SYMBOLS 
+from kabosu_plus.sbv2.nlp import YomiError
+from kabosu_plus.sbv2.logging import logger
 
 _g2p = G2p()
-LOCAL_PATH = "./bert/kcbert-large"
-tokenizer = AutoTokenizer.from_pretrained(LOCAL_PATH)
+_KO_PHONES = KO_SYMBOLS + PUNCTUATIONS
+def replace_unknown_mora(phones: list[str], raise_yomi_error: bool = False) -> list[str]:
+    new_phones = []
+    for phone in phones:
+        if phone not in _KO_PHONES:
+            if raise_yomi_error:
+                raise YomiError(f"unknown phone: {phone}")
+            else:
+                logger.warning(
+                    f'Cannot read unknown {phone}, replaced with "UNK"'
+                )
+                phone = "UNK"
 
+        new_phones.append(phone)
+
+    return new_phones
+
+tagger = MeCab.Tagger("-Owakati")
 
 rep_map = {
     "/": ",",
@@ -54,35 +70,8 @@ rep_map = {
     "」": "'",
 }
 
-# List of (hangul, hangul divided) pairs:
-_hangul_divided = [(re.compile('%s' % x[0]), x[1]) for x in [
-    # ('ㄳ', 'ㄱㅅ'),   # g2pk2, A Syllable-ending Rule
-    # ('ㄵ', 'ㄴㅈ'),
-    # ('ㄶ', 'ㄴㅎ'),
-    # ('ㄺ', 'ㄹㄱ'),
-    # ('ㄻ', 'ㄹㅁ'),
-    # ('ㄼ', 'ㄹㅂ'),
-    # ('ㄽ', 'ㄹㅅ'),
-    # ('ㄾ', 'ㄹㅌ'),
-    # ('ㄿ', 'ㄹㅍ'),
-    # ('ㅀ', 'ㄹㅎ'),
-    # ('ㅄ', 'ㅂㅅ'),
-    ('ㅘ', 'ㅗㅏ'),
-    ('ㅙ', 'ㅗㅐ'),
-    ('ㅚ', 'ㅗㅣ'),
-    ('ㅝ', 'ㅜㅓ'),
-    ('ㅞ', 'ㅜㅔ'),
-    ('ㅟ', 'ㅜㅣ'),
-    ('ㅢ', 'ㅡㅣ'),
-    ('ㅑ', 'ㅣㅏ'),
-    ('ㅒ', 'ㅣㅐ'),
-    ('ㅕ', 'ㅣㅓ'),
-    ('ㅖ', 'ㅣㅔ'),
-    ('ㅛ', 'ㅣㅗ'),
-    ('ㅠ', 'ㅣㅜ')
-]]
 
-_latin_to_hangul = [(re.compile('%s' % x[0], re.IGNORECASE), x[1]) for x in [
+_latin_to_hangul = [
     ('a', '에이'),
     ('b', '비'),
     ('c', '시'),
@@ -109,7 +98,7 @@ _latin_to_hangul = [(re.compile('%s' % x[0], re.IGNORECASE), x[1]) for x in [
     ('x', '엑스'),
     ('y', '와이'),
     ('z', '제트')
-]]
+]
 
 
 def replace_punctuation(text):
@@ -253,7 +242,7 @@ def normalize_numbers(text):
 
 def latin_to_hangul(text):
     for regex, replacement in _latin_to_hangul:
-        text = re.sub(regex, replacement, text)
+        text = text.replace(regex, replacement)
     return text
 
 
@@ -273,12 +262,12 @@ def fix_g2pk2_error(text):
 
 def divide_hangul(text):
     text = j2hcj(h2j(text))
-    for regex, replacement in _hangul_divided:
-        text = re.sub(regex, replacement, text)
+    for regex, replacement in HANGUL_CONVERT_LIST:
+        text = text.replace(regex, replacement)
     return text
 
 
-def text_normalize(text):
+def normalize_text(text):
     text = replace_punctuation(text)
     text = normalize_numbers(text)
     text = number_to_hangul(text)
@@ -303,7 +292,7 @@ def sep_text(text):
 
 
 def text_to_words(text):
-    tokens = tokenizer.tokenize(text)
+    tokens = tagger.parse(text).split()
     words = []
     word_lens = []
     for idx, t in enumerate(tokens):
@@ -325,7 +314,7 @@ def replace_unk(words, text):
                 continue
             if (loc == 0):
                 temp = text[:text.find(words[loc+1])].strip()
-                if (temp[-1] in punctuation and words[loc+1] in punctuation):
+                if (temp[-1] in PUNCTUATIONS and words[loc+1] in PUNCTUATIONS):
                     words[loc] = temp[:-1]
                 else:
                     words[loc] = temp
@@ -336,7 +325,7 @@ def replace_unk(words, text):
 
             if (words[loc+1] != "[UNK]" and words[loc-1] != "[UNK]"):
                 temp = text[text.find(words[loc-1])+len(words[loc-1]):text.find(words[loc-1])+text[text.find(words[loc-1]):].find(words[loc+1])].strip()
-                if (temp[-1] in punctuation and words[loc+1] in punctuation):
+                if (temp[-1] in PUNCTUATIONS and words[loc+1] in PUNCTUATIONS):
                     words[loc] = temp[:-1]
                 else:
                     words[loc] = temp
@@ -351,16 +340,17 @@ def replace_unk(words, text):
     else:
         return words
 
-def g2p(text):
+def g2p(text: str, raise_yomi_error: bool = False):
+    norm_text = normalize_text(text)
     phones = []
     tones = []
     phone_len = []
-    words, word_lens = text_to_words(text)
+    words, word_lens = text_to_words(norm_text)
     # print(words)
-    words = replace_unk(words, text)
+    words = replace_unk(words, norm_text)
     # print(words)
     for word in words:
-        if word in punctuation:
+        if word in PUNCTUATIONS:
             phones.append(word)
             tones.append(0)
             phone_len.append(1)
@@ -370,6 +360,8 @@ def g2p(text):
             tones += [0]*len(temp_phones)
             phone_len.append(len(temp_phones))
 
+    replace_unknown_mora(phones=phones, raise_yomi_error=raise_yomi_error)
+
     word2ph = []
     for wl, pl in zip(word_lens, phone_len):
         aaa = distribute_phone(pl, wl)
@@ -378,10 +370,10 @@ def g2p(text):
     phones = ["_"] + phones + ["_"]
     tones = [0] + tones + [0]
     word2ph = [1] + word2ph + [1]
-    assert len(phones) == len(tones), text
-    assert len(phones) == sum(word2ph), text
+    assert len(phones) == len(tones), norm_text
+    assert len(phones) == sum(word2ph), norm_text
 
-    return phones, tones, word2ph
+    return norm_text, phones, tones, word2ph
 
 
 if __name__ == "__main__":
@@ -391,7 +383,7 @@ if __name__ == "__main__":
     # print(g2p("In this paper, we propose 1 DSPGAN, a GAN-based universal vocoder."))
 
 
-    print(g2p(text_normalize("그는 미인 대회 도전이라는 새로운 꿈을 품게 됐고 학교의 허락을 받아내 대회에 출전 ‘미스 콜로라도’로 뽑혔다.")))
+    print(g2p("그는 미인 대회 도전이라는 새로운 꿈을 품게 됐고 학교의 허락을 받아내 대회에 출전 ‘미스 콜로라도’로 뽑혔다."))
     
     
     # all_phones = set()

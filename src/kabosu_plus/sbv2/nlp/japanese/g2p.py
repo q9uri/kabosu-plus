@@ -1,10 +1,10 @@
 import re
-import sys
+from kabosu_plus.sbv2.nlp import YomiError
 from typing import TypedDict
 
-from kabosu_plus.sbv2.constants import Languages
+
 from kabosu_plus.sbv2.logging import logger
-from kabosu_plus.sbv2.nlp import onnx_bert_models
+
 
 from kabosu_plus import (
     run_frontend,
@@ -25,7 +25,7 @@ def g2p(
     keihan:bool = False,
     babytalk:bool = False,
     dakuten:bool = False,
-) -> tuple[list[str], list[int], list[int], list[str], list[str], list[str]]:
+) -> tuple[str, list[str], list[int], list[int], list[str], list[str], list[str]]:
     """
     他で使われるメインの関数。`normalize_text()` で正規化された `norm_text` を受け取り、
     - phones: 音素のリスト（ただし `!` や `,` や `.` など punctuation が含まれうる）
@@ -96,7 +96,7 @@ def g2p(
     for i in sep_text:
         if i not in PUNCTUATIONS:
             sep_tokenized.append(
-                onnx_bert_models.load_tokenizer(Languages.JP).tokenize(i)
+               [ i[char_num] for char_num in range( len(i)) ]
             )  # ここでおそらく`i`が文字単位に分割される
         else:
             sep_tokenized.append([i])
@@ -121,7 +121,7 @@ def g2p(
     if not use_jp_extra:
         phones = [phone if phone != "N" else "n" for phone in phones]
 
-    return phones, tones, word2ph, sep_text, sep_kata, sep_kata_with_joshi
+    return norm_text, phones, tones, word2ph, sep_text, sep_kata, sep_kata_with_joshi
 
 
 def text_to_sep_kata(
@@ -860,10 +860,3 @@ def __distribute_phone(n_phone: int, n_word: int) -> list[int]:
 
     return phones_per_word
 
-
-class YomiError(Exception):
-    """
-    OpenJTalk で、読みが正しく取得できない箇所があるときに発生する例外。
-    基本的に「学習の前処理のテキスト処理時」には発生させ、そうでない場合は、
-    raise_yomi_error=False にしておいて、この例外を発生させないようにする。
-    """

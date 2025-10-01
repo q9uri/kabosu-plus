@@ -5,6 +5,7 @@ from g2p_en import G2p
 from kabosu_plus.sbv2.constants import Languages
 from kabosu_plus.sbv2.nlp import onnx_bert_models
 from kabosu_plus.sbv2.nlp.english.cmudict import get_dict, get_shortform_dict
+from kabosu_plus.sbv2.nlp.english.normalizer import normalize_text 
 from kabosu_plus.sbv2.nlp.symbols import PUNCTUATIONS, SYMBOLS
 
 
@@ -87,11 +88,12 @@ eng_dict = get_dict()
 short_form_dict = get_shortform_dict()
 
 
-def g2p(text: str) -> tuple[list[str], list[int], list[int]]:
+def g2p(text: str, raise_yomi_error: bool = False) -> tuple[str, list[str], list[int], list[int]]:
+    norm_text = normalize_text(text)
     phones = []
     tones = []
     phone_len = []
-    words = __text_to_words(text)
+    words = __text_to_words(norm_text)
 
     for word in words:
         temp_phones, temp_tones = [], []
@@ -137,10 +139,10 @@ def g2p(text: str) -> tuple[list[str], list[int], list[int]]:
     phones = ["_"] + phones + ["_"]
     tones = [0] + tones + [0]
     word2ph = [1] + word2ph + [1]
-    assert len(phones) == len(tones), text
-    assert len(phones) == sum(word2ph), text
+    assert len(phones) == len(tones), norm_text
+    assert len(phones) == sum(word2ph), norm_text
 
-    return phones, tones, word2ph
+    return norm_text, phones, tones, word2ph
 
 
 def __post_replace_ph(ph: str) -> str:

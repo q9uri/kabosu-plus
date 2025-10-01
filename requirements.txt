@@ -3,8 +3,9 @@ kabosu-core @ git+https://github.com/q9uri/kabosu-core@f66e09f5ac7c8f7fa47f28613
 e2k
 #korean g2p
 num2words
-g2pk2
+g2pk3 @ git+https://github.com/q9uri/g2pk3@9ca44dc7aa0a01d09be06bdc2197d9974685367e
 jamo
+mecab_ko
 #chinese g2p
 pypinyin
 jieba
@@ -14,3 +15,4 @@ g2p_en
 onnxruntime; (sys_platform != 'linux' or platform_machine != 'x86_64') and sys_platform != 'win32'
 onnxruntime-directml; sys_platform == 'win32'
 onnxruntime-gpu; sys_platform == 'linux' and platform_machine == 'x86_64'
+numpy<2
