@@ -17,10 +17,11 @@ def replace_unknown_mora(phones: list[str], raise_yomi_error: bool = False) -> l
             if raise_yomi_error:
                 raise YomiError(f"unknown phone: {phone}")
             else:
-                phone = "'"
-            logger.warning(
-                    f'Cannot read unknown {phone}, replaced with "\'"'
+                logger.warning(
+                    f'Cannot read unknown {phone}, replaced with "UNK"'
                 )
+                phone = "UNK"
+
         new_phones.append(phone)
 
     return new_phones
