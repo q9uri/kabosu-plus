@@ -21,6 +21,7 @@ def extract_bert_feature_onnx(
     onnx_providers: Sequence[Union[str, tuple[str, dict[str, Any]]]],
     assist_text: Optional[str] = None,
     assist_text_weight: float = 0.7,
+    ignore_err: bool = False,
 ) -> NDArray[Any]:
     """
     日本語のテキストから BERT の特徴量を抽出する (ONNX 推論)
@@ -93,8 +94,23 @@ def extract_bert_feature_onnx(
         session.run_with_iobinding(io_binding, run_options=run_options)
         style_res = io_binding.get_outputs()[0].numpy()
         style_res_mean = np.mean(style_res, axis=0)
+    
+    if ignore_err:
+        text_lengh = len(text) + 2
 
-    assert len(word2ph) == len(text) + 2, text
+        if len(word2ph) == text_lengh:
+            None
+        elif len(word2ph) > text_lengh:
+            size_dif = len(word2ph) - text_lengh
+            word2ph = word2ph[:size_dif]
+
+        elif len(word2ph) < text_lengh:
+            size_dif = text_lengh - len(word2ph)
+            pad = [0 for i in range(size_dif)]
+            word2ph = word2ph + pad
+
+    else:
+        assert len(word2ph) == len(text) + 2, f"text = text, {text}, len(word2ph): {len(word2ph)}, len(text: {len(text)}"
     word2phone = word2ph
     phone_level_feature = []
     for i in range(len(word2phone)):
