@@ -17,12 +17,18 @@ def test_kanalizer_convert_test():
     assert output == "レモン"
     print(output)
 
-def test_g2p():
+def test_g2p_yomikata():
     output = kabosu_plus.g2p("そして、畳の表は、すでに幾年前に換えられたのか分らなかった。", kana=True)
     assert output == "ソシテ、タタミノオモテハ、スデニイクネンマエニカエラレタノカワカラナカッタ、"
-    output = kabosu_plus.g2p("you are so cute! mii-chan!", kana=True)
-    assert output == "ユーアーソーキュート、ミイチャン、  "
+
+def test_g2p_hungl():
+    output = kabosu_plus.g2p("이봐, 센파이. 한국으로 여행하자? 현지의 맛있는 요리를 먹으면 좋겠다.", kana=True)
+    assert output == "イブァ、ゼンパイ、ハンググロヨヘンハザ？ホンジウィマジンヌノリルルモグモンゾゲッッタ、"
     print(output)
+
+def test_g2p_kanalizer():
+    output = kabosu_plus.g2p("you are so cute! mii-chan!", kana=True)
+    assert output == "ユーアーソーキュート、ミイチャン、"
 
 def test_njd_features_to_babytalk():
 
