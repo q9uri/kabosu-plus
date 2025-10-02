@@ -18,16 +18,19 @@ def test_kanalizer_convert_test():
     print(output)
 
 def test_g2p_yomikata():
-    output = kabosu_plus.g2p("そして、畳の表は、すでに幾年前に換えられたのか分らなかった。", kana=True)
+    text = kabosu_plus.normalize_text("そして、畳の表は、すでに幾年前に換えられたのか分らなかった。")
+    output = kabosu_plus.g2p(text, kana=True)
     assert output == "ソシテ、タタミノオモテハ、スデニイクネンマエニカエラレタノカワカラナカッタ、"
 
 def test_g2p_hungl():
-    output = kabosu_plus.g2p("이봐, 센파이. 한국으로 여행하자? 현지의 맛있는 요리를 먹으면 좋겠다.", kana=True)
-    assert output == "イブァ、ゼンパイ、ハンググロヨヘンハザ？ホンジウィマジンヌノリルルモグモンゾゲッッタ、"
+    text = kabosu_plus.normalize_text("이봐, 센파이. 한국으로 여행하자? 현지의 맛있는 요리를 먹으면 좋겠다.")
+    output = kabosu_plus.g2p(text, kana=True)
+    assert output == "イブァ、ゼンパイ、ハンググロヨヘンハザ？ ホンジウィマジンヌノリルルモグモンゾゲッッタ、"
     print(output)
 
 def test_g2p_kanalizer():
-    output = kabosu_plus.g2p("you are so cute! mii-chan!", kana=True)
+    text = kabosu_plus.normalize_text("you are so cute! mii-chan!")
+    output = kabosu_plus.g2p(text, kana=True)
     assert output == "ユーアーソーキュート、ミイチャン、"
 
 def test_njd_features_to_babytalk():

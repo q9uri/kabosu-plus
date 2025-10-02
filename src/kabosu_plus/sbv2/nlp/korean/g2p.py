@@ -1,6 +1,6 @@
 import re
 from jamo import h2j, j2hcj
-from g2pk3 import G2p
+from kabosu_core.g2pk4 import G2p
 import mecab_ko as MeCab
 
 from kabosu_plus.sbv2.nlp.symbols import PUNCTUATIONS
@@ -246,20 +246,6 @@ def latin_to_hangul(text):
     return text
 
 
-def fix_g2pk2_error(text):
-    new_text = ""
-    i = 0
-    while i < len(text) - 4:
-        if (text[i:i+3] == 'ㅇㅡㄹ' or text[i:i+3] == 'ㄹㅡㄹ') and text[i+3] == ' ' and text[i+4] == 'ㄹ':
-            new_text += text[i:i+3] + ' ' + 'ㄴ'
-            i += 5
-        else:
-            new_text += text[i]
-            i += 1
-
-    new_text += text[i:]
-    return new_text
-
 def divide_hangul(text):
     text = j2hcj(h2j(text))
     for regex, replacement in HANGUL_CONVERT_LIST:
@@ -355,7 +341,7 @@ def g2p(text: str, raise_yomi_error: bool = False):
             tones.append(0)
             phone_len.append(1)
         else:
-            temp_phones = fix_g2pk2_error(divide_hangul(_g2p(word)))
+            temp_phones = divide_hangul(_g2p(word))
             phones += temp_phones
             tones += [0]*len(temp_phones)
             phone_len.append(len(temp_phones))

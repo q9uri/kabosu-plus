@@ -7,8 +7,8 @@ from e2k import C2K
 from jaconv import jaconv
 from num2words import num2words
 
-from kabosu_plus.sbv2.nlp.japanese.katakana_map import KATAKANA_MAP
-from kabosu_plus.sbv2.nlp.japanese.romkan import to_katakana
+from kabosu_plus.sbv2.nlp.japanese.normalizer.katakana_map import KATAKANA_MAP
+from kabosu_plus.sbv2.nlp.japanese.normalizer.romkan import to_katakana
 from kabosu_plus.sbv2.nlp.symbols import PUNCTUATIONS
 
 

@@ -1,5 +1,5 @@
 #japanese g2p
-kabosu-core[all] @ git+https://github.com/q9uri/kabosu-core@6a9a39a3befed556222d0c52cac4136b31edfcc1
+kabosu-core[ko] @ git+https://github.com/q9uri/kabosu-core@50f03a759aa2946333dbf9c2a26f683c5332f083
 e2k
 #korean g2p
 num2words

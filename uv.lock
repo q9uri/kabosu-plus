@@ -1158,7 +1158,7 @@ sdist = { url = "https://files.pythonhosted.org/packages/f1/2a/f64a28c236e3e8687
 [[package]]
 name = "kabosu-core"
 version = "0.3.0"
-source = { git = "https://github.com/q9uri/kabosu-core?rev=6a9a39a3befed556222d0c52cac4136b31edfcc1#6a9a39a3befed556222d0c52cac4136b31edfcc1" }
+source = { git = "https://github.com/q9uri/kabosu-core?rev=50f03a759aa2946333dbf9c2a26f683c5332f083#50f03a759aa2946333dbf9c2a26f683c5332f083" }
 dependencies = [
     { name = "google-re2" },
     { name = "jaconv" },
@@ -1212,7 +1212,7 @@ requires-dist = [
     { name = "jamo", specifier = ">=0.4.1" },
     { name = "jieba", specifier = ">=0.42.1" },
     { name = "jpreprocess", specifier = ">=0.1.5" },
-    { name = "kabosu-core", extras = ["all"], git = "https://github.com/q9uri/kabosu-core?rev=6a9a39a3befed556222d0c52cac4136b31edfcc1" },
+    { name = "kabosu-core", extras = ["ko"], git = "https://github.com/q9uri/kabosu-core?rev=50f03a759aa2946333dbf9c2a26f683c5332f083" },
     { name = "kanalizer", specifier = ">=0.1.1" },
     { name = "marine-plus", specifier = ">=0.0.6.post3" },
     { name = "mecab-ko", specifier = ">=1.0.2" },

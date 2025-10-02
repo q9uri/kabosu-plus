@@ -1,5 +1,6 @@
 from kabosu_plus.sbv2.nlp import language_selector
 from kabosu_plus.sbv2.constants import Languages
+from kabosu_plus import normalize_text
 
 def g2p(text: str,
         raise_yomi_error: bool = False,
@@ -22,7 +23,8 @@ def g2p(text: str,
     if language == Languages.JP:
 
         from kabosu_plus.sbv2.nlp.japanese import g2p as g2p_ja
-        norm_text, phones, tones, word2ph, sep_text, sep_kata ,sep_kata_with_joshi = g2p_ja.g2p(norm_text=text,
+        norm_text = normalize_text(text)
+        norm_text, phones, tones, word2ph, sep_text, sep_kata ,sep_kata_with_joshi = g2p_ja.g2p(norm_text=norm_text,
                                                                                                 use_jp_extra=use_jp_extra,
                                                                                                 raise_yomi_error=raise_yomi_error,
                                                                                                 keihan=keihan,

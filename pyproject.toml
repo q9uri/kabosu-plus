@@ -11,7 +11,7 @@ dependencies = [
     "jamo>=0.4.1",
     "jieba>=0.42.1",
     "jpreprocess>=0.1.5",
-    "kabosu-core[all]",
+    "kabosu-core[ko]",
     "kanalizer>=0.1.1",
     "marine-plus>=0.0.6.post3",
     "mecab-ko>=1.0.2",
@@ -49,7 +49,7 @@ packages = ["src/kabosu_plus"]
 yomikata = { git = "https://github.com/q9uri/yomikata", rev = "ac5a27a2ed72ea4fab4e3a79e2d4799fb411e6bb" }
 optimum = { git = "https://github.com/huggingface/optimum" }
 optimum-onnx = { git = "https://github.com/huggingface/optimum-onnx.git" }
-kabosu-core = { git = "https://github.com/q9uri/kabosu-core", rev = "6a9a39a3befed556222d0c52cac4136b31edfcc1" }
+kabosu-core = { git = "https://github.com/q9uri/kabosu-core", rev = "50f03a759aa2946333dbf9c2a26f683c5332f083" }
 
 [build-system]
 requires = ["hatchling"]

@@ -4,7 +4,7 @@ from .sbv2.nlp.japanese.normalizer import normalize_text as normalize_text_plus
 from typing import Union
 from pathlib import Path
 from kabosu_core import pyopenjtalk
-from kabosu_core.pyopenjtalk.normalizer import normalize_text as normalize_text_core
+from kabosu_core.pyopenjtalk import normalize_text as normalize_text_core
 import jpreprocess
 
 def load_marine_model(model_dir: Union[str, None] = None, dict_dir: Union[str, None] = None):
@@ -22,13 +22,7 @@ def update_global_jtalk_with_user_dict(
 
 def extract_fullcontext(
         text: str,
-        hankaku: bool = True,
-        itaiji: bool = True,
-        kanalizer: bool = False,
-        yomikata: bool = True,
-        sbv2: bool = True,
         use_vanilla: bool = False,
-        use_ko2ja: bool = True,
         run_marine: bool = False,
         keihan: bool = False,
         babytalk: bool = False,
@@ -42,23 +36,10 @@ def extract_fullcontext(
     ## output
     => list[str] : fullcontext label
     """
-    text = normalize_text(
-        text=text,
-        hankaku=hankaku,
-        itaiji=itaiji,
-        kanalizer=kanalizer,
-        yomikata=yomikata,
-        sbv2=sbv2
-    )
 
     return pyopenjtalk.extract_fullcontext(
         text=text,
-        hankaku=hankaku,
-        itaiji=itaiji,
-        yomikata=yomikata,
-        kanalizer=kanalizer,
         use_vanilla=use_vanilla,
-        use_ko2ja=use_ko2ja,
         run_marine=run_marine,
         keihan=keihan,
         babytalk=babytalk,
@@ -69,13 +50,7 @@ def extract_fullcontext(
 
 def g2p(
         text: str,
-        hankaku: bool = True,
-        itaiji: bool = True,
-        kanalizer: bool = False,
-        yomikata: bool = True,
-        sbv2: bool = True,
         use_vanilla: bool = False,
-        use_ko2ja: bool = True,
         run_marine: bool = False,
         keihan: bool = False,
         babytalk: bool = False,
@@ -84,23 +59,10 @@ def g2p(
         join: bool = True,
         jpreprocess: Union[jpreprocess.JPreprocess, None] = None
     ):
-    text = normalize_text(
-        text=text,
-        hankaku=hankaku,
-        itaiji=itaiji,
-        kanalizer=kanalizer,
-        yomikata=yomikata,
-        sbv2=sbv2
-    )
-        
+
     return pyopenjtalk.g2p(
         text=text,
-        hankaku=False,
-        itaiji=False,
-        kanalizer=False,
-        yomikata=False,
         use_vanilla=use_vanilla,
-        use_ko2ja=use_ko2ja,
         run_marine=run_marine,
         keihan=keihan,
         babytalk=babytalk,
@@ -112,13 +74,7 @@ def g2p(
 
 def run_frontend(
         text: str,
-        hankaku: bool = True,
-        itaiji: bool = True,
-        kanalizer: bool = False,
-        yomikata: bool = True,
-        sbv2: bool = True,
         use_vanilla: bool = False,
-        use_ko2ja: bool = True,
         run_marine: bool = False,
         keihan: bool = False,
         babytalk: bool = False,
@@ -137,26 +93,13 @@ def run_frontend(
     ## output
     => list[NjdObject] : njd_features
     """
-    text = normalize_text(
-        text=text,
-        hankaku=hankaku,
-        itaiji=itaiji,
-        kanalizer=kanalizer,
-        yomikata=yomikata,
-        sbv2=sbv2
-    )
 
     return pyopenjtalk.run_frontend(
         text=text,
-        hankaku=False,
-        itaiji=False,
-        kanalizer=False,
-        yomikata=False,
         keihan=keihan,
         babytalk=babytalk,
         dakuten=dakuten,
         use_vanilla=use_vanilla,
-        use_ko2ja=use_ko2ja,
         run_marine=run_marine,
         jpreprocess=jpreprocess
     )
