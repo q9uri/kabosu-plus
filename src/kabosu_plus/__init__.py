@@ -1,13 +1,14 @@
 
 from .types import NjdObject
-from .sbv2.nlp.japanese.normalizer import normalize_text
+from .sbv2.nlp.japanese.normalizer import normalize_text as normalize_text_plus
 from typing import Union
 from pathlib import Path
-import kabosu_core
+from kabosu_core import pyopenjtalk
+from kabosu_core.pyopenjtalk.normalizer import normalize_text as normalize_text_core
 import jpreprocess
 
 def load_marine_model(model_dir: Union[str, None] = None, dict_dir: Union[str, None] = None):
-    kabosu_core.load_marine_model(model_dir=model_dir, dict_dir=dict_dir)
+    pyopenjtalk.load_marine_model(model_dir=model_dir, dict_dir=dict_dir)
 
 def update_global_jtalk_with_user_dict(
         user_dictionary: str | Path | None = None
@@ -17,7 +18,7 @@ def update_global_jtalk_with_user_dict(
     Note that this will change the global state of the openjtalk module.
 
     """
-    kabosu_core.update_global_jtalk_with_user_dict(user_dictionary=user_dictionary)
+    pyopenjtalk.update_global_jtalk_with_user_dict(user_dictionary=user_dictionary)
 
 def extract_fullcontext(
         text: str,
@@ -27,6 +28,7 @@ def extract_fullcontext(
         yomikata: bool = True,
         sbv2: bool = True,
         use_vanilla: bool = False,
+        use_ko2ja: bool = True,
         run_marine: bool = False,
         keihan: bool = False,
         babytalk: bool = False,
@@ -40,7 +42,7 @@ def extract_fullcontext(
     ## output
     => list[str] : fullcontext label
     """
-    text = normalizer(
+    text = normalize_text(
         text=text,
         hankaku=hankaku,
         itaiji=itaiji,
@@ -49,13 +51,14 @@ def extract_fullcontext(
         sbv2=sbv2
     )
 
-    return kabosu_core.extract_fullcontext(
+    return pyopenjtalk.extract_fullcontext(
         text=text,
         hankaku=hankaku,
         itaiji=itaiji,
         yomikata=yomikata,
         kanalizer=kanalizer,
         use_vanilla=use_vanilla,
+        use_ko2ja=use_ko2ja,
         run_marine=run_marine,
         keihan=keihan,
         babytalk=babytalk,
@@ -72,6 +75,7 @@ def g2p(
         yomikata: bool = True,
         sbv2: bool = True,
         use_vanilla: bool = False,
+        use_ko2ja: bool = True,
         run_marine: bool = False,
         keihan: bool = False,
         babytalk: bool = False,
@@ -80,7 +84,7 @@ def g2p(
         join: bool = True,
         jpreprocess: Union[jpreprocess.JPreprocess, None] = None
     ):
-    text = normalizer(
+    text = normalize_text(
         text=text,
         hankaku=hankaku,
         itaiji=itaiji,
@@ -89,13 +93,14 @@ def g2p(
         sbv2=sbv2
     )
         
-    return kabosu_core.g2p(
+    return pyopenjtalk.g2p(
         text=text,
         hankaku=False,
         itaiji=False,
         kanalizer=False,
         yomikata=False,
         use_vanilla=use_vanilla,
+        use_ko2ja=use_ko2ja,
         run_marine=run_marine,
         keihan=keihan,
         babytalk=babytalk,
@@ -113,6 +118,7 @@ def run_frontend(
         yomikata: bool = True,
         sbv2: bool = True,
         use_vanilla: bool = False,
+        use_ko2ja: bool = True,
         run_marine: bool = False,
         keihan: bool = False,
         babytalk: bool = False,
@@ -131,7 +137,7 @@ def run_frontend(
     ## output
     => list[NjdObject] : njd_features
     """
-    text = normalizer(
+    text = normalize_text(
         text=text,
         hankaku=hankaku,
         itaiji=itaiji,
@@ -140,7 +146,7 @@ def run_frontend(
         sbv2=sbv2
     )
 
-    return kabosu_core.run_frontend(
+    return pyopenjtalk.run_frontend(
         text=text,
         hankaku=False,
         itaiji=False,
@@ -150,6 +156,7 @@ def run_frontend(
         babytalk=babytalk,
         dakuten=dakuten,
         use_vanilla=use_vanilla,
+        use_ko2ja=use_ko2ja,
         run_marine=run_marine,
         jpreprocess=jpreprocess
     )
@@ -159,7 +166,7 @@ def make_label(
         jpreprocess: Union[jpreprocess.JPreprocess, None] = None
         ) -> list[str]:
     
-    return kabosu_core.make_label(
+    return pyopenjtalk.make_label(
         njd_features=njd_features, 
         jpreprocess=jpreprocess
         )
@@ -169,16 +176,16 @@ def reader_furigana(text:str):
     # this liblary use fork version yomikata
     # https://github.com/q9uri/yomikata
 
-    return kabosu_core.reader_furigana(text=text)
+    return pyopenjtalk.reader_furigana(text=text)
 
 def dictreader_furigana(text:str):
-    return kabosu_core.dictreader_furigana(text=text)
+    return pyopenjtalk.dictreader_furigana(text=text)
 
 
 def kanalizer_convert(text: str):
-    return kabosu_core.kanalizer_convert(text=text)
+    return pyopenjtalk.kanalizer_convert(text=text)
 
-def normalizer(
+def normalize_text(
         text: str,
         hankaku: bool = True,
         itaiji: bool = True,
@@ -195,9 +202,9 @@ def normalizer(
     str : normalized text
     """
     if sbv2:
-        text = normalize_text(text)
+        text = normalize_text_plus(text)
 
-    return  kabosu_core.normalizer(
+    return  normalize_text_core(
         text=text,
         hankaku=hankaku,
         itaiji=itaiji,

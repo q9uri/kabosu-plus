@@ -1,4 +1,4 @@
-from kabosu_plus.sbv2.normalizer import normalize_text
+from kabosu_plus.sbv2.nlp.japanese.normalizer import normalize_text
 #code move from https://github.com/q9uri/Daisuki-Bert-VITS2
 
 def test_normalize_text_basic():

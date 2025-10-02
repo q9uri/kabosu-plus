@@ -339,6 +339,8 @@ __UNIT_PATTERN = re.compile(
     r"(?=($|(?=/([^A-Za-z]|$))|[^/A-Za-z]))"
 )
 
+
+
 # 正規化後に残す文字種を表すパターン
 __PUNCTUATION_CLEANUP_PATTERN = re.compile(
     # ↓ ひらがな、カタカナ、漢字
@@ -353,6 +355,10 @@ __PUNCTUATION_CLEANUP_PATTERN = re.compile(
     + r"\uFF21-\uFF3A\uFF41-\uFF5A"
     # ↓ ギリシャ文字
     + r"\u0370-\u03FF\u1F00-\u1FFF"
+    #HANGUL_SYLLABLES
+    + r"\uac00-\ud7a3"
+    #HANGUL_JAMO
+    + r"\u1100-\u11ff"
     # ↓ "!", "?", "…", ",", ".", "'", "-", 但し`…`はすでに`...`に変換されている
     # スラッシュは pyopenjtalk での形態素解析処理で重要なので、例外的に正規化後も残す (g2p 処理内で "." に変換される)
     # pyopenjtalk は「漢字の直後に2つ以上の連続する半角ハイフンがある場合」にその漢字の読みが取得できなくなる謎のバグがあるため、
